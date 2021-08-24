@@ -6,3 +6,5 @@ assets
 *~
 *.dot
 autocover
+book.pdf
+package-lock.json
