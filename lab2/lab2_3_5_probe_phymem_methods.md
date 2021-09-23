@@ -1,8 +1,11 @@
+### （？？？）
+
 **探测物理内存分布和大小的方法**
 
 操作系统需要知道了解整个计算机系统中的物理内存如何分布的，哪些可用，哪些不可用。其基本方法是通过BIOS中断调用来帮助完成的。其中BIOS中断调用必须在实模式下进行，所以在bootloader进入保护模式前完成这部分工作相对比较合适。这些部分由boot/bootasm.S中从probe\_memory处到finish\_probe处的代码部分完成。通过BIOS中断获取内存可调用参数为e820h的INT
 15h BIOS中断。BIOS通过系统内存映射地址描述符（Address Range
 Descriptor）格式来表示系统物理内存布局，其具体表示如下：
+
 ```
 Offset  Size    Description
 00h    8字节   base address               #系统内存块基地址

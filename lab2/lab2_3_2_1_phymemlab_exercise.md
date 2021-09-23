@@ -1,4 +1,4 @@
-### 练习
+### 练习（已完成）
 
 为了实现lab2的目标，lab2提供了3个基本练习和2个扩展练习，要求完成实验报告。
 
@@ -15,8 +15,7 @@
 
 **练习1：实现 first-fit 连续物理内存分配算法（需要编程）**
 
-在实现first fit
-内存分配算法的回收函数时，要考虑地址连续的空闲块之间的合并操作。提示:在建立空闲页块链表时，需要按照空闲页块起始地址来排序，形成一个有序的链表。可能会修改default\_pmm.c中的default\_init，default\_init\_memmap，default\_alloc\_pages，
+在实现first fit内存分配算法的回收函数时，要考虑地址连续的空闲块之间的合并操作。提示:在建立空闲页块链表时，需要按照空闲页块起始地址来排序，形成一个有序的链表。可能会修改default\_pmm.c中的default_init，default\_init\_memmap，default\_alloc\_pages，
 default\_free\_pages等相关函数。请仔细查看和理解default\_pmm.c中的注释。
 
 请在实验报告中简要说明你的设计实现过程。请回答如下问题：
@@ -53,7 +52,7 @@ kern/mm/pmm.c中的page\_remove\_pte函数。page\_remove\_pte函数的调用关
 Buddy System算法把系统中的可用存储空间划分为存储块(Block)来进行管理, 每个存储块的大小必须是2的n次幂(Pow(2, n)), 即1, 2, 4, 8, 16, 32, 64, 128...
 
  -  参考[伙伴分配器的一个极简实现](http://coolshell.cn/articles/10427.html)， 在ucore中实现buddy system分配算法，要求有比较充分的测试用例说明实现的正确性，需要有设计文档。
- 
+
 **扩展练习Challenge：任意大小的内存单元slub分配算法（需要编程）**
 
 slub算法，实现两层架构的高效内存单元分配，第一层是基于页大小的内存分配，第二层是在第一层基础上实现基于任意大小的内存分配。可简化实现，能够体现其主体思想即可。
