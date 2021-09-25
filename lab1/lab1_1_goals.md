@@ -1,20 +1,8 @@
 ## 实验目的：
 
-操作系统是一个软件，也需要通过某种机制加载并运行它。在这个实验中我们通过kernel_entry作为入口函数，为启动操作系统ucore做准备。lab1提供了一个非常小的ucore OS,在该OS中使用entry.S作为启动操作系统的第一个文件，在该文件中的kernel_entry是执行的第一个函数。通过分析这个ucore OS,读者可以了解到：
+操作系统是一个软件，也需要通过某种机制加载并运行它。对于LoongArch32的计算机来说，上电复位最初启动的是一个BIOS软件（例如PMON），该BIOS软件能够支持从网络加载ELF格式的操作系统内核，从而开始启动我们已经编译好的uCore内核。
 
-在这里我们将通过另外一个更加简单的软件-bootloader来完成这些工作。为此，我们需要完成一个能够切换到x86的保护模式并显示字符的bootloader，为启动操作系统ucore做准备。lab1提供了一个非常小的bootloader和ucore OS，整个bootloader执行代码小于512个字节，这样才能放到硬盘的主引导扇区中。通过分析和实现这个bootloader和ucore OS，读者可以了解到：
-
-- 计算机原理
-   - CPU的编址与寻址: 基于分段机制的内存管理
-   - CPU的中断机制
-   - 外设：串口/并口/CGA，时钟，硬盘
-
-- Bootloader软件
-  - 编译运行bootloader的过程
-  - 调试bootloader的方法
-  - PC启动bootloader的过程
-  - ELF执行文件的格式和加载
-  - 外设访问：读硬盘，在CGA上显示字符串
+而对于QEMU虚拟机而言，我们可以直接使用`-kernel`来指定我们需要加载的内核的ELF文件，从而直接完成了内核的载入过程，并直接从ELF的入口点开始启动。
 
 - ucore OS软件
   - 编译运行ucore OS的过程
