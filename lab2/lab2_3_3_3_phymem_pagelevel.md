@@ -28,13 +28,6 @@ struct Page {
 ```
 这表示flags目前用到了六个bit表示页目前具有的六种属性，bit 0表示此页是否被保留（reserved），如果是被保留的页，则bit 0会设置为1，且不能放到空闲页链表中，即这样的页不是空闲页，不能动态分配与释放。比如目前内核代码占用的空间就属于这样“被保留”的页。在本实验中，bit 1表示此页是否是free的，如果设置为1，表示这页是free的，可以被分配；如果设置为0，表示这页已经被分配出去了，不能被再二次分配。
 
-[^已添加]: 上述memlayout.h中添加了PG_dirty等flag，在struct Page中添加了 zone_num swap_link
-[^待检查]: 下面是对添加的flags的解释
-
-bit 3表示此页是否在一个slab中，如果设置为1，表示该页作为slab列表中一个可分配出去的页，当该页要释放时，将其重新保存在slab列表中，而不是直接返回给伙伴系统；如果设置为0，则表示该页不在slab中。bit 4表示次页是否被修改过，如果设置为1，表示这页被修改过；如果设置为0，则表示没有被修改过。bit 5表示该页是否可以进行交换，如果设置为1，表示可以进行置换；如果设置为0，则不可以i进行置换。bit 6表示该页是否在活跃的page_list中。
-
-[^待添加]: 此处应当添加bit 6设置为不同值的含义
-
 另外，本实验这里取的名字PG\_property比较不直观，主要是我们可以设计不同的页分配算法（best fit, buddy system等），那么这个PG\_property就有不同的含义了。
 
 在本实验中，Page数据结构的成员变量property用来记录某连续内存空闲块的大小（即地址连续的空闲页的个数）。这里需要注意的是用到此成员变量的这个Page比较特殊，是这个连续内存空闲块地址最小的一页（即头一页，Head Page）。连续内存空闲块利用这个页的成员变量property来记录在此块内的空闲页的个数。这里取的名字property也不是很直观，原因与上面类似，在不同的页分配算法中，property有不同的含义。
@@ -55,9 +48,7 @@ typedef struct {
 
 - 空闲内存空间的起始地址在哪里？
 
-  [^待检查]: 该处修改了maxpa计算的方式以及npage的计算方式
-
-对于这两个问题，我们首先根据memlayout.h给出的核心态内存基地址KERNBASE（0x80000000）和KMEMSIZE（512M）计算出最大的物理内存地址KERNTOP（定义在memlayout.h中），最大物理内存地址maxpa等于KERNTOP（定义在page\_init函数中的局部变量），在该实验中Page size为4096 bytes即2^12 bytes，所以需要管理的物理页的个数npage的计算方式如下：
+对于这两个问题，我们首先根据memlayout.h给出的核心态内存基地址KERNBASE（0xa0000000）和KMEMSIZE（512M）计算出最大的物理内存地址KERNTOP（定义在memlayout.h中），最大物理内存地址maxpa等于KERNTOP（定义在page\_init函数中的局部变量），在该实验中Page size为4096 bytes即2^12 bytes，所以需要管理的物理页的个数npage的计算方式如下：
 
 ```c
 #define KERNTOP             (KERNBASE + KMEMSIZE)
@@ -108,10 +99,4 @@ struct pmm_manager {
     void (*check)(void);                              // check the correctness of XXX_pmm_manager 
 };
 ```
-重点是实现init\_memmap/ alloc\_pages/free\_pages这三个函数。当完成物理内存页管理初始化工作后，计算机系统的内存布局如下图所示：
-
-[^待修改]: 内存布局需修改
-
-![](../lab2_figs/image003.png)
-图3 计算机系统的内存布局
-
+重点是实现init\_memmap/ alloc\_pages/free\_pages这三个函数。

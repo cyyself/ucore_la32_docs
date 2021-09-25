@@ -1,4 +1,3 @@
-### (已完成)
 
 **链接地址/虚地址/物理地址/加载地址以及edata/end/text的含义**
 
@@ -13,7 +12,7 @@ OUTPUT_ARCH(loongarch)
 ENTRY(kernel_entry)
 SECTIONS
 {
-    . = 0x80000000;
+    . = 0xa0000000;
 
   .text      :
   {
@@ -93,7 +92,7 @@ SECTIONS
 ```
 其实从链接脚本的内容，可以大致猜出它指定告诉链接器的各种信息：
 
-* 内核加载地址：0x80000000
+* 内核加载地址：0xa0000000
 * 入口（起始代码）地址： ENTRY(kern\_entry)
 * cpu机器类型：loongarch
 
