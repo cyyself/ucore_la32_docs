@@ -22,7 +22,7 @@
     - readelf：分析ELF格式的执行程序文件
     - make：软件工程管理工具， make命令执行时，需要一个 makefile 文件，以告诉make命令如何去编译和链接程序
     - dd：读写数据到文件和设备中的工具
-  - 硬件模拟器：qemu -- qemu可模拟多种CPU硬件环境，本实验中，用于模拟一台 intel x86-32的计算机系统。类似的工具还有BOCHS, SkyEye等
+  - 硬件模拟器：qemu -- qemu可模拟多种CPU硬件环境，本实验中，用于模拟一台LoongArch32的计算机系统。
   - markdown文本格式的编写和阅读工具(比如阅读ucore_docs)
     - 编写工具 haroopad 
     - 阅读工具 gitbook

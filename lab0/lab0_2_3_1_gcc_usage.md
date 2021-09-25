@@ -1,6 +1,4 @@
 
 #### gcc的基本用法
 
-如果你还没装gcc编译环境或自己不确定装没装，不妨先执行 ：
-
-	sudo apt-get install build-essential
+我们提供的LoongArch32编译环境的Docker中已经提供了针对x86-64的GCC以及针对LoongArch32的GCC。

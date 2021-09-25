@@ -10,11 +10,11 @@
 
 之后gdb就会载入这个文件中的符号信息了。
 
-通过gdb可以对ucore代码进行调试，以lab1中调试memset函数为例：
+通过gdb可以对ucore代码进行调试，以lab0中调试memset函数为例：
 
-(1)  运行 `qemu -S -s -hda ./bin/ucore.img -monitor stdio`
+(1)  运行 `qemu-system-loongson32 -kernel obj/ucore-kernel-initrd -M ls3a5k32 -m 256 -nographic -S -s`
 
-(2)  运行 gdb并与qemu进行连接
+(2)  运行 gdb并与qemu进行连接 `gdb obj/ucore-kernel-initrd`
 
 (3)  设置断点并执行
 
@@ -26,19 +26,40 @@
 <tr><td>窗口一</td><td>窗口二</td>
 <tr>
 <td>
-chy@laptop: ~/lab1$ qemu -S -s -hda ./bin/ucore.img 
+<pre>
+➜  ucore-loongarch32 git:(master) qemu-system-loongson32 -kernel obj/ucore-kernel-initrd -M ls3a5k32 -m 256 -nographic -S -s 
+mips_ls3a7a_init: num_nodes 1
+mips_ls3a7a_init: node 0 mem 0x10000000
+*****zl 1, mask0
+memory_offset = 0x78;
+cpu_offset = 0xc88; system_offset = 0xce8;
+irq_offset = 0x3058;
+interface_offset = 0x30b8;
+boot_params_buf is 
+param len=0x89f0
+env a8f00020
+</pre>
 </td>
 <td>
-chy@laptop: ~/lab1$ gdb ./bin/kernel <br>
-(gdb) target remote:1234 <br>
-Remote debugging using :1234 <br>
-0x0000fff0 in ?? () <br>
-(gdb) break memset <br>
-Breakpoint 1, memset (s=0xc029b000, c=0x0, n=0x1000) at libs/string.c:271 <br>
-(gdb) continue <br>
-Continuing. <br>
-Breakpoint 1, memset (s=0xc029b000, c=0x0, n=0x1000) at libs/string.c:271 <br>
-271     memset(void *s, char c, size_t n) { <br>
+<pre>
+➜  ~ docker exec -it la32-env /bin/zsh
+➜  ~ echo "set auto-load safe-path /" >> ~/.gdbinit
+➜  ~ cd ucore-loongarch32
+➜  ucore-loongarch32 git:(master) loongarch32-linux-gnu-gdb obj/ucore-kernel-initrd 
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from obj/ucore-kernel-initrd...done.
+0xa0000000 in wrs_kernel_text_start ()
+(gdb) break memset
+Breakpoint 1 at 0xa0001314: file kern/libs/string.c, line 277.
+(gdb) c
+Continuing.
+
+Breakpoint 1, memset (s=0xa1ffc000, c=0 '\000', n=4096) at kern/libs/string.c:277
+277	    char *p = s;
 (gdb)
+</pre>
+
 </td>
 </tr></table>

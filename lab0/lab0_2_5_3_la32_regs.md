@@ -1,0 +1,173 @@
+#### LoongArch32寄存器
+
+LoongArch32的通用寄存器有32个，记为r0~r31。其中0号寄存器的值恒为0。但这些寄存器也根据ABI有一定的特殊用途，表如下：
+
+<table>
+<tr>
+	<td>寄存器号</td>
+	<td>助记符</td>
+	<td>用途</td>
+</tr>
+<tr>
+	<td>0</td>
+	<td>zero</td>
+	<td>恒定为0</td>
+</tr>
+<tr>
+	<td>1</td>
+	<td>ra</td>
+	<td>返回地址</td>
+</tr>
+<tr>
+	<td>2</td>
+	<td>tp</td>
+	<td></td>
+</tr>
+<tr>
+	<td>3</td>
+	<td>sp</td>
+	<td>栈指针</td>
+</tr>
+<tr>
+	<td>4</td>
+	<td>v0 | a0</td>
+	<td>函数调用的返回值或第1个参数共用</td>
+</tr>
+<tr>
+	<td>5</td>
+	<td>v1 | a1</td>
+	<td>函数调用的第2返回值或第2个参数共用</td>
+</tr>
+<tr>
+	<td>6</td>
+	<td>a2</td>
+	<td>第3个参数</td>
+</tr>
+<tr>
+	<td>7</td>
+	<td>a3</td>
+	<td>第4个参数</td>
+</tr>
+<tr>
+	<td>8</td>
+	<td>a4</td>
+	<td>第5个参数</td>
+</tr>
+<tr>
+	<td>9</td>
+	<td>a5</td>
+	<td>第6个参数</td>
+</tr>
+<tr>
+	<td>10</td>
+	<td>a6</td>
+	<td>第7个参数</td>
+</tr>
+<tr>
+	<td>11</td>
+	<td>a7</td>
+	<td>第8个参数</td>
+</tr>
+<tr>
+	<td>12</td>
+	<td>t0</td>
+	<td>第1个临时寄存器</td>
+</tr>
+<tr>
+	<td>13</td>
+	<td>t1</td>
+	<td>第2个临时寄存器</td>
+</tr>
+<tr>
+	<td>14</td>
+	<td>t2</td>
+	<td>第3个临时寄存器</td>
+</tr>
+<tr>
+	<td>15</td>
+	<td>t3</td>
+	<td>第4个临时寄存器</td>
+</tr>
+<tr>
+	<td>16</td>
+	<td>t4</td>
+	<td>第5个临时寄存器</td>
+</tr>
+<tr>
+	<td>17</td>
+	<td>t5</td>
+	<td>第6个临时寄存器</td>
+</tr>
+<tr>
+	<td>18</td>
+	<td>t6</td>
+	<td>第7个临时寄存器</td>
+</tr>
+<tr>
+	<td>19</td>
+	<td>t7</td>
+	<td>第8个临时寄存器</td>
+</tr>
+<tr>
+	<td>20</td>
+	<td>t8</td>
+	<td>第9个临时寄存器</td>
+</tr>
+<tr>
+	<td>21</td>
+	<td>reserved_reg</td>
+	<td>暂时保留，无特定用途</td>
+</tr>
+<tr>
+	<td>22</td>
+	<td>fp</td>
+	<td>栈帧指针</td>
+</tr>
+<tr>
+	<td>23</td>
+	<td>s0</td>
+	<td>暂存寄存器0</td>
+</tr>
+<tr>
+	<td>24</td>
+	<td>s1</td>
+	<td>暂存寄存器1</td>
+</tr>
+<tr>
+	<td>25</td>
+	<td>s2</td>
+	<td>暂存寄存器2</td>
+</tr>
+<tr>
+	<td>26</td>
+	<td>s3</td>
+	<td>暂存寄存器3</td>
+</tr>
+<tr>
+	<td>27</td>
+	<td>s4</td>
+	<td>暂存寄存器4</td>
+</tr>
+<tr>
+	<td>28</td>
+	<td>s5</td>
+	<td>暂存寄存器5</td>
+</tr>
+<tr>
+	<td>29</td>
+	<td>s6</td>
+	<td>暂存寄存器6</td>
+</tr>
+<tr>
+	<td>30</td>
+	<td>s7</td>
+	<td>暂存寄存器7</td>
+</tr>
+<tr>
+	<td>31</td>
+	<td>s8</td>
+	<td>暂存寄存器8</td>
+</tr>
+</table>
+
+除此之外，还有CSR状态控制寄存器，这一部分寄存器本身不重要，但是其功能配合异常处理与特权指令非常重要，这一部分请读者越多LoongArch32文档的第7章部分。
