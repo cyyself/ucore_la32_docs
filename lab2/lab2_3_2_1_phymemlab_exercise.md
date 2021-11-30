@@ -9,12 +9,16 @@
 
 **练习0：填写已有实验**
 
-本实验依赖实验1。请把你做的实验1的代码填入本实验中代码中有“LAB1”的注释相应部分。提示：可采用diff和patch工具进行半自动的合并（merge），也可用一些图形化的比较/merge工具来手动合并，比如meld，eclipse中的diff/merge工具，understand中的diff/merge工具等。
+本实验依赖实验1。请把你做的实验1的代码填入本实验中代码中有“LAB1”的注释相应部分。尽管我们在实验二代码中没有开放相应的编译选项，但请在此完成git代码合并的实验。
+
+提示：可以在LAB1完成后观察VSCode窗口左边的git状态，将修改的文件全部点击加号并写下commit message，在LAB1完成提交后，在实验代码目录使用命令git checkout lab2，切换到lab2，然后输入git merge lab1，将lab1的修改合并到lab2，此时可能出现一些conflict，这时我们可以打开VSCode看左侧的git插件，查看报告的冲突，并进行选择，最终完成合并的提交。
 
 **练习1：实现 first-fit 连续物理内存分配算法（需要编程）**
 
 在实现first fit内存分配算法的回收函数时，要考虑地址连续的空闲块之间的合并操作。提示:在建立空闲页块链表时，需要按照空闲页块起始地址来排序，形成一个有序的链表。可能会修改default\_pmm.c中的default_init，default\_init\_memmap，default\_alloc\_pages，
 default\_free\_pages等相关函数。请仔细查看和理解default\_pmm.c中的注释。
+
+注意，目前实验提供的代码已经可以运行，但希望读者在理解的基础上能自己重新实现有关函数。
 
 请在实验报告中简要说明你的设计实现过程。请回答如下问题：
  - 你的first fit算法是否有进一步的改进空间
