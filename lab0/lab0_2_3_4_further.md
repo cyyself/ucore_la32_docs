@@ -4,6 +4,6 @@
 
 gcc tools相关文档
 
-版本管理软件（CVS、SVN、GIT等）的使用
+版本管理软件（如GIT）的使用
 
 …

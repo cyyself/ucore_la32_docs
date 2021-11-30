@@ -48,10 +48,8 @@ docker load -i la32-ucore-env.tgz
 
 ```shell
 docker run -it \
-    --rm \
     --name la32-env \
     --user=$(id -u $USER):$(id -g $USER) \
-    --env="DISPLAY" \
     --net=host \
     --workdir="/home/$USER" \
     --volume="/home/$USER:/home/$USER" \
@@ -59,7 +57,6 @@ docker run -it \
     --volume="/etc/passwd:/etc/passwd:ro" \
     --volume="/etc/shadow:/etc/shadow:ro" \
     --volume="/etc/sudoers.d:/etc/sudoers.d:ro" \
-    --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
     la32-ucore-env
 ```
 
@@ -78,3 +75,7 @@ docker run -it \
 之后这就进入了我们提供的容器中，使用`cd`命令进入到ucore-loongarch32文件夹，然后输入`make qemu`可以观察操作系统运行情况，若运行成功则说明容器配置正确。
 
 在Docker容器还在运行的时候，我们可以通过docker exec的方式继续启动一个该容器的终端，方便在容器内进行其它操作，使用命令`docker exec -it la32-env /bin/zsh`，其中`/bin/zsh`可以换成自己喜欢的Shell，如Bash。
+
+而针对使用VSCode的同学，我们推荐可以直接安装VSCode的git插件，然后直接将VSCode挂到Docker容器中，操作如下：
+
+![VSCode Docker](../lab0_figs/image003.png "VSCode attach Docker")
