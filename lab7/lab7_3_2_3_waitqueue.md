@@ -55,81 +55,9 @@ void wakeup_queue(wait_queue_t *queue, uint32_t wakeup_flags, bool del);
 ### 调用关系举例
 
 如下图所示，对于唤醒进程的函数`wakeup_wait`，可以看到它会被各种信号量的V操作函数`up`调用，并且它会调用`wait_queue_del`函数和`wakup_proc`函数来完成唤醒进程的操作。
-```dot
-digraph "wakeup_wait" {
-  graph [bgcolor="#F7F5F3", fontname="Arial", fontsize="10", label="", rankdir="LR"];
-  node [shape="box", style="filled", color="blue", fontname="Arial", fontsize="10", fillcolor="white", label=""];
-  edge [color="#CC0044", fontname="Arial", fontsize="10", label=""];
-  graph [bgcolor="#F7F5F3"];
-  __N1 [color="red", label="wakeup_wait"];
-  __N2 [label="wait_queue_del"];
-  __N3 [label="wakeup_proc"];
-  __N4 [label="__up"];
-  __N5 [label="up"];
-  __N6 [label="phi_test_sema"];
-  __N7 [label="phi_take_forks_sema"];
-  __N8 [label="cond_signal"];
-  __N9 [label="phi_put_forks_sema"];
-  __N10 [label="cond_wait"];
-  __N11 [label="unlock_mm"];
-  __N12 [label="phi_take_forks_condvar"];
-  __N13 [label="phi_put_forks_condvar"];
-  __N14 [label="wakeup_first"];
-  __N15 [label="wakeup_queue"];
-  __N1 -> __N2;
-  __N1 -> __N3;
-  __N6 -> __N5;
-  __N7 -> __N5;
-  __N8 -> __N5;
-  __N9 -> __N5;
-  __N10 -> __N5;
-  __N11 -> __N5;
-  __N12 -> __N5;
-  __N13 -> __N5;
-  __N5 -> __N4;
-  __N4 -> __N1;
-  __N14 -> __N1;
-  __N15 -> __N1;
-}
-```
 
+![wakeup_wait](../lab7_figs/wakeup_wait.svg)
 
 如下图所示，而对于让进程进入等待状态的函数`wait_current_set`，可以看到它会被各种信号量的P操作函数｀down`调用，并且它会调用`wait_init`完成对等待项的初始化，并进一步调用`wait_queue_add`来把与要处于等待状态的进程所关联的等待项挂到与信号量绑定的等待队列中。
 
-```dot
-digraph "wait_current_set" {
-  graph [bgcolor="#F7F5F3", fontname="Arial", fontsize="10", label="", rankdir="LR"];
-  node [shape="box", style="filled", color="blue", fontname="Arial", fontsize="10", fillcolor="white", label=""];
-  edge [color="#CC0044", fontname="Arial", fontsize="10", label=""];
-  graph [bgcolor="#F7F5F3"];
-  __N1 [color="red", label="wait_current_set"];
-  __N3 [label="wait_init"];
-  __N4 [label="list_init"];
-  __N5 [label="wait_queue_add"];
-  __N6 [label="list_empty"];
-  __N7 [label="list_add_before"];
-  __N8 [label="__down"];
-  __N9 [label="down"];
-  __N10 [label="phi_take_forks_sema"];
-  __N11 [label="cond_signal"];
-  __N12 [label="phi_put_forks_sema"];
-  __N13 [label="cond_wait"];
-  __N14 [label="lock_mm"];
-  __N15 [label="phi_take_forks_condvar"];
-  __N16 [label="phi_put_forks_condvar"];
-  __N3 -> __N4;
-  __N1 -> __N3;
-  __N5 -> __N6;
-  __N5 -> __N7;
-  __N1 -> __N5;
-  __N10 -> __N9;
-  __N11 -> __N9;
-  __N12 -> __N9;
-  __N13 -> __N9;
-  __N14 -> __N9;
-  __N15 -> __N9;
-  __N16 -> __N9;
-  __N9 -> __N8;
-  __N8 -> __N1;
-}
-```
+![wait_current_set](../lab7_figs/wait_current_set.svg)
