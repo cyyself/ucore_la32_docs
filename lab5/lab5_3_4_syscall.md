@@ -39,23 +39,6 @@ syscall(int num, ...) {
 }
 ```
 
-从中可以看出，应用程序调用的exit/fork/wait/getpid等库函数最终都会调用syscall函数，只是调用的参数不同而已，如果看最终的汇编代码会更清楚：
-
-```
-……
-  34:    8b 55 d4               mov    -0x2c(%ebp),%edx
-  37:    8b 4d d8               mov    -0x28(%ebp),%ecx
-  3a:    8b 5d dc                mov    -0x24(%ebp),%ebx
-  3d:    8b 7d e0                mov    -0x20(%ebp),%edi
-  40:    8b 75 e4                mov    -0x1c(%ebp),%esi
-  43:    8b 45 08               mov    0x8(%ebp),%eax
-  46:    cd 80                   int    $0x80
-48: 89 45 f0                mov    %eax,-0x10(%ebp)
-……
-```
-
-可以看到其实是把系统调用号放到EAX，其他5个参数a[0]\~a[4]分别保存到EDX/ECX/EBX/EDI/ESI五个寄存器中，及最多用6个寄存器来传递系统调用的参数，且系统调用的返回结果是EAX。比如对于getpid库函数而言，系统调用号（SYS\_getpid=18）是保存在EAX中，返回值（调用此库函数的的当前进程号pid）也在EAX中。
-
 #### 2. 与用户进程相关的系统调用 
 
 在本实验中，与进程相关的各个系统调用属性如下所示：
