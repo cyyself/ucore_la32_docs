@@ -36,7 +36,7 @@ ld -m    elf_i386 -nostdlib -T tools/kernel.ld -o bin/kernel  obj/kern/init/entr
 
 从中可以看出，hello应用程序不仅仅是hello.c，还包含了支持hello应用程序的用户态库：
 
-* user/libs/initcode.S：所有应用程序的起始用户态执行地址“\_start”，调整了EBP和ESP后，调用umain函数。
+* user/libs/initcode.S：所有应用程序的起始用户态执行地址“\_start”，调整了gp和sp后，调用umain函数。
 * user/libs/umain.c：实现了umain函数，这是所有应用程序执行的第一个C函数，它将调用应用程序的main函数，并在main函数结束后调用exit函数，而exit函数最终将调用sys\_exit系统调用，让操作系统回收进程资源。
 * user/libs/ulib.[ch]：实现了最小的C函数库，除了一些与系统调用无关的函数，其他函数是对访问系统调用的包装。
 * user/libs/syscall.[ch]：用户层发出系统调用的具体实现。
@@ -79,29 +79,39 @@ SECTIONS {
 
 ```
     // kernel_execve - do SYS_exec syscall to exec a user program called by user_main kernel_thread
-    static int
-    kernel_execve(const char *name, unsigned char *binary, size_t size) {
-    int ret, len = strlen(name);
-    asm volatile (
-        "int %1;"
-        : "=a" (ret)
-        : "i" (T_SYSCALL), "0" (SYS_exec), "d" (name), "c" (len), "b" (binary), "D" (size)
-        : "memory");
+static int
+kernel_execve(const char *name, const char **argv) {
+    int argc = 0, ret;
+    while (argv[argc] != NULL) {
+        argc ++;
+    }
+    
+    //panic("unimpl");
+
+    asm volatile(
+      "addi.w   $r4, $r0,%1;\n" // syscall no.
+      "move $r4, %2;\n"
+      "move $r5, %3;\n"
+      "move $r6, %4;\n"
+      "move $r7, %5;\n"
+      "syscall  0;\n"
+    //  "nop;\n"
+      "move %0, $r4;\n"
+      : "=r"(ret)
+      : "i"(SYSCALL_BASE+SYS_exec), "r"(name), "r"(argc), "r"(argv), "r"(argc) 
+      : "$r4", "$r5", "$r6", "$r7", "$r4"
+    );
     return ret;
-   }
+}
 
-    #define __KERNEL_EXECVE(name, binary, size) ({                          \
-            cprintf("kernel_execve: pid = %d, name = \"%s\".\n",        \
-                    current->pid, name);                                \
-            kernel_execve(name, binary, (size_t)(size));                \
-        })
+#define __KERNEL_EXECVE(name, path, ...) ({                         \
+const char *argv[] = {path, ##__VA_ARGS__, NULL};       \
+					 kprintf("kernel_execve: pid = %d, name = \"%s\".\n",    \
+							 current->pid, name);                            \
+					 kernel_execve(name, argv);                              \
+})
 
-    #define KERNEL_EXECVE(x) ({                                             \
-            extern unsigned char _binary_obj___user_##x##_out_start[],  \
-                _binary_obj___user_##x##_out_size[];                    \
-            __KERNEL_EXECVE(#x, _binary_obj___user_##x##_out_start,     \
-                            _binary_obj___user_##x##_out_size);         \
-        })
+#define KERNEL_EXECVE(x, ...)                   __KERNEL_EXECVE(#x, #x, ##__VA_ARGS__)
 ……
 // init_main - the second kernel thread used to create kswapd_main & user_main kernel threads
 static int
@@ -147,8 +157,8 @@ load\_icode函数的主要工作就是给用户进程建立一个能够让用户
 
 5. 需要给用户进程设置用户栈，为此调用mm\_mmap函数建立用户栈的vma结构，明确用户栈的位置在用户虚空间的顶端，大小为256个页，即1MB，并分配一定数量的物理内存且建立好栈的虚地址<--\>物理地址映射关系；
 
-6. 至此,进程内的内存管理vma和mm数据结构已经建立完成，于是把mm-\>pgdir赋值到cr3寄存器中，即更新了用户进程的虚拟内存空间，此时的initproc已经被hello的代码和数据覆盖，成为了第一个用户进程，但此时这个用户进程的执行现场还没建立好；
+6. 至此,进程内的内存管理vma和mm数据结构已经建立完成，于是把mm-\>pgdir赋值到变量current_pgdir中，即更新了用户进程的虚拟内存空间，此时的initproc已经被hello的代码和数据覆盖，成为了第一个用户进程，但此时这个用户进程的执行现场还没建立好；
 
-7. 先清空进程的中断帧，再重新设置进程的中断帧，使得在执行中断返回指令“iret”后，能够让CPU转到用户态特权级，并回到用户态内存空间，使用用户态的代码段、数据段和堆栈，且能够跳转到用户进程的第一条指令执行，并确保在用户态能够响应中断；
+7. 先清空进程的中断帧，再重新设置进程的中断帧，使得在执行中断返回指令后，能够让CPU转到用户态特权级，并回到用户态内存空间，且能够跳转到用户进程的第一条指令执行，并确保在用户态能够响应中断；
 
-至此，用户进程的用户环境已经搭建完毕。此时initproc将按产生系统调用的函数调用路径原路返回，执行中断返回指令“iret”（位于trapentry.S的最后一句）后，将切换到用户进程hello的第一条语句位置\_start处（位于user/libs/initcode.S的第三句）开始执行。
+至此，用户进程的用户环境已经搭建完毕。此时initproc将按产生系统调用的函数调用路径原路返回，执行中断返回指令“ertn”（位于exception.S的最后一句）后，将切换到用户进程hello的第一条语句位置\_start处（位于user/libs/initcode.S的第三句）开始执行。
