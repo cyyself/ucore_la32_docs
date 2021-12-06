@@ -46,7 +46,6 @@ env a8f00020
 ➜  ~ echo "set auto-load safe-path /" >> ~/.gdbinit
 ➜  ~ cd ucore-loongarch32
 ➜  ucore-loongarch32 git:(master) loongarch32-linux-gnu-gdb obj/ucore-kernel-initrd 
-
 For help, type "help".
 Type "apropos word" to search for commands related to "word"...
 Reading symbols from obj/ucore-kernel-initrd...done.
@@ -55,11 +54,11 @@ Reading symbols from obj/ucore-kernel-initrd...done.
 Breakpoint 1 at 0xa0001314: file kern/libs/string.c, line 277.
 (gdb) c
 Continuing.
-
 Breakpoint 1, memset (s=0xa1ffc000, c=0 '\000', n=4096) at kern/libs/string.c:277
 277	    char *p = s;
 (gdb)
 </pre>
-
 </td>
-</tr></table>
+
+
+

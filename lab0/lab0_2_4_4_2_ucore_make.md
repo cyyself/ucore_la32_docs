@@ -2,7 +2,7 @@
 
 (1) 编译过程：在解压缩后的 ucore 源码包中使用 make 命令即可。例如 lab0中：
 ```
-	chy@laptop: ~/lab0$  make
+	chy@laptop: ~/lab0$  make qemu
 ```
 在lab0目录下的obj目录中，生成了最终目标文件：
  - ucore-kernel-initrd：包含磁盘部分的Kernel的文件

@@ -1,6 +1,6 @@
 ### 操作系统启动过程
 
-当bootloader通过把ucore在系统加载到内存后（，就转跳到ucore操作系统在内存中的入口位置（kern/start.S中的start的地址），这样ucore就接管了整个控制权。当前的ucore功能很简单，只完成基本的内存管理和外设中断管理。ucore主要完成的工作包括：
+当bootloader通过把ucore在系统加载到内存后，就转跳到ucore操作系统在内存中的入口位置（kern/start.S中的start的地址），这样ucore就接管了整个控制权。当前的ucore功能很简单，只完成基本的内存管理和外设中断管理。ucore主要完成的工作包括：
 
 - 配置DMW，使得操作系统拥有可用的地址空间（位于`kern/init/entry.S`，其它部分均为C语言程序，整体位于`kern/init/init.c`）
 - 初始化终端；
