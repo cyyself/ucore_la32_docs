@@ -51,7 +51,7 @@
       * [练习2](lab1/lab1_2_1_2_ex2.md)
       * [练习3](lab1/lab1_2_1_3_ex3.md)
       * [练习4](lab1/lab1_2_1_4_ex4.md)
-    * [实验报告要求](lab1/lab1_2_1_exercise.md)
+    * [编译方法](lab1/lab1_2_2_0_bootlab_compile.md)
   * [从机器启动到操作系统运行的过程](lab1/lab1_3_booting.md)
     * [BIOS启动过程](lab1/lab1_3_1_bios_booting.md)
     * [操作系统启动过程](lab1/lab1_3_2_booting_os.md)
@@ -65,7 +65,7 @@
   * [实验目的](lab2/lab2_3_1_phymemlab_goal.md)
   * [实验内容](lab2/lab2_3_2_phymemlab_contents.md)
     * [练习](lab2/lab2_3_2_1_phymemlab_exercise.md)
-    * [项目组成](lab2/lab2_3_2_2_phymemlab_files.md)
+    * [编译方法](lab2/lab2_3_2_2_phymemlab_compile.md)
   * [物理内存管理](lab2/lab2_3_3_phymem_manage.md)
     * [实验执行流程概述](lab2/lab2_3_3_1_phymemlab_overview.md)
     * [以页为单位管理物理内存](lab2/lab2_3_3_3_phymem_pagelevel.md)
@@ -74,7 +74,6 @@
       * [建立段页式管理中需要考虑的关键问题](lab2/lab2_3_3_5_2_key_problems_in_seg_page.md)
       * [系统执行中地址映射的四个阶段](lab2/lab2_3_3_5_4_maping_relations.md)
       * [建立虚拟页和物理页帧的地址映射关系](lab2/lab2_3_3_5_3_setup_paging_map.md)
-  * [实验报告要求](lab2/lab2_3_4_phymemlab_require.md)
   * [附录A. 链接地址/虚地址/物理地址/加载地址以及edata/end/text的含义](lab2/lab2_3_7_phymemlab_concepts.md)
 
 
@@ -84,12 +83,12 @@
   * [实验目的](lab3/lab3_1_goals.md)
   * [实验内容](lab3/lab3_2_lab2.md)
     * [练习](lab3/lab3_2_1_exercises.md)
+    * [编译方法](lab3/lab3_2_2_vmmlab_compile.md)
   * [虚拟内存管理](lab3/lab3_3_vmm.md)
     * [基本原理概述](lab3/lab3_3_1_vmm_principles.md)
     * [实验执行流程概述](lab3/lab3_3_2_labs_steps.md)
     * [关键数据结构和相关函数分析](lab3/lab3_3_3_data_structures.md)
   * [TLB Refill例外处理](lab3/lab3_4_tlbmiss_handler.md)
-  * [实验报告要求](lab3/lab3_5_labs_requirement.md)
 
 ## Lab 4
 
@@ -97,7 +96,7 @@
   * [实验目的](lab4/lab4_1_goals.md)
   * [实验内容](lab4/lab4_2_labs.md)
     * [练习](lab4/lab4_2_1_exercises.md)
-    * [项目组成](lab4/lab4_2_2_files.md)
+    * [编译方法](lab4/lab4_2_2_compile.md)
   * [内核线程管理](lab4/lab4_3_kernel_thread_management.md)
     * [实验执行流程概述](lab4/lab4_3_1_lab_steps.md)
     * [设计关键数据结构 -- 进程控制块](lab4/lab4_3_2_pcb.md)
@@ -105,7 +104,6 @@
       * [创建第0个内核线程idleproc](lab4/lab4_3_3_1_create_kthread_idleproc.md)
       * [创建第1个内核线程initproc](lab4/lab4_3_3_2_create_kthread_initproc.md)
       * [调度并执行内核线程initproc](lab4/lab4_3_3_3_sched_run_kthread.md)          
-  * [实验报告要求](lab4/lab4_4_labs_requirement.md)
   * [附录A：实验四的参考输出](lab4/lab4_5_appendix_a.md)
   * [附录B：【原理】进程的属性与特征解析](lab4/lab4_6_appendix_b.md)
 
@@ -115,12 +113,12 @@
   * [实验目的](lab5/lab5_1_goals.md)
   * [实验内容](lab5/lab5_2_lab2.md)
     * [练习](lab5/lab5_2_1_exercises.md)
+    * [编译方法](lab5/lab5_2_2_compile.md)
   * [用户进程管理](lab5/lab5_3_user_process.md)
     * [实验执行流程概述](lab5/lab5_3_1_lab_steps.md)
     * [创建用户进程](lab5/lab5_3_2_create_user_process.md)
     * [进程退出和等待进程](lab5/lab5_3_3_process_exit_wait.md)
     * [系统调用实现](lab5/lab5_3_4_syscall.md)
-  * [实验报告要求](lab5/lab5_4_lab_requirement.md)
   * [附录 A：【原理】用户进程的特征](lab5/lab5_5_appendix.md)
 
 ## Lab 6
@@ -129,7 +127,7 @@
   * [实验目的](lab6/lab6_1_goals.md)
   * [实验内容](lab6/lab6_2_labs.md)
     * [练习](lab6/lab6_2_1_exercises.md)
-    * [项目组成](lab6/lab6_2_2_files.md)
+    * [编译方法](lab6/lab6_2_2_compile.md)
   * [调度框架和调度算法设计与实现](lab6/lab6_3_scheduler_design.md)
     * [实验执行流程概述](lab6/lab6_3_1_exercises.md)
     * [进程状态](lab6/lab6_3_3_process_state.md)
@@ -144,7 +142,6 @@
     * [Stride Scheduling](lab6/lab6_3_6_stride_scheduling.md)
       * [基本思路](lab6/lab6_3_6_1_basic_method.md)
       * [使用优先队列实现 Stride Scheduling](lab6/lab6_3_6_2_priority_queue.md)
-  * [实验报告要求](lab6/lab6_4_labs_requirement.md)
 
 ## Lab 7
 
@@ -152,7 +149,7 @@
   * [实验目的](lab7/lab7_1_goals.md)
   * [实验内容](lab7/lab7_2_labs.md)
     * [练习](lab7/lab7_2_1_exercises.md)
-    * [项目组成](lab7/lab7_2_2_files.md)
+    * [编译方法](lab7/lab7_2_2_compile.md)
   * [同步互斥机制的设计与实现](lab7/lab7_3_synchronization_implement.md)
     * [实验执行流程概述](lab7/lab7_3_1_experiment.md)
     * [同步互斥机制的底层支撑](lab7/lab7_3_2_synchronization_basic_support.md)
@@ -161,7 +158,6 @@
       * [等待队列](lab7/lab7_3_2_3_waitqueue.md)
     * [信号量](lab7/lab7_3_3_semaphore.md)
     * [管程和条件变量](lab7/lab7_3_4_monitors.md)
-  * [实验报告要求](lab7/lab7_4_lab_requirement.md)
   * [附录](lab7/lab7_5_appendix.md)
 
 ## Lab 8
@@ -170,7 +166,7 @@
   * [实验目的](lab8/lab8_1_goals.md)
   * [实验内容](lab8/lab8_2_labs.md)
     * [练习](lab8/lab8_2_1_exercises.md)
-    * [项目组成](lab8/lab8_2_2_files.md)
+    * [编译方法](lab8/lab8_2_2_compile.md)
   * [文件系统设计与实现](lab8/lab8_3_fs_design_implement.md)
     * [ucore 文件系统总体介绍](lab8/lab8_3_1_ucore_fs_introduction.md)
     * [通用文件系统访问接口](lab8/lab8_3_2_fs_interface.md)
@@ -188,5 +184,4 @@
   * [文件操作实现](lab8/lab8_3_7_file_op_implement.md)
     * [打开文件](lab8/lab8_3_7_1_file_open.md)
     * [读文件](lab8/lab8_3_7_2_file_read.md)
-  * [实验报告要求](lab8/lab8_4_lab_requirement.md)
 
