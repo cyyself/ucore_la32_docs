@@ -51,7 +51,7 @@
       * [练习2](lab1/lab1_2_1_2_ex2.md)
       * [练习3](lab1/lab1_2_1_3_ex3.md)
       * [练习4](lab1/lab1_2_1_4_ex4.md)
-    * [项目组成](lab1/lab1_2_2_files.md)
+    * [实验报告要求](lab1/lab1_2_1_exercise.md)
   * [从机器启动到操作系统运行的过程](lab1/lab1_3_booting.md)
     * [BIOS启动过程](lab1/lab1_3_1_bios_booting.md)
     * [操作系统启动过程](lab1/lab1_3_2_booting_os.md)
@@ -75,10 +75,8 @@
       * [系统执行中地址映射的四个阶段](lab2/lab2_3_3_5_4_maping_relations.md)
       * [建立虚拟页和物理页帧的地址映射关系](lab2/lab2_3_3_5_3_setup_paging_map.md)
   * [实验报告要求](lab2/lab2_3_4_phymemlab_require.md)
-  * [附录A. 探测物理内存分布和大小的方法](lab2/lab2_3_5_probe_phymem_methods.md)
-  * [附录B. 实现物理内存探测](lab2/lab2_3_6_implement_probe_phymem.md)
-  * [附录C. 链接地址/虚地址/物理地址/加载地址以及edata/end/text的含义](lab2/lab2_3_7_phymemlab_concepts.md)
-  * [附录D. 自映射机制](lab2/lab2_3_3_6_self_mapping.md)
+  * [附录A. 链接地址/虚地址/物理地址/加载地址以及edata/end/text的含义](lab2/lab2_3_7_phymemlab_concepts.md)
+
 
 ## Lab 3
 
@@ -121,7 +119,6 @@
   * [实验目的](lab5/lab5_1_goals.md)
   * [实验内容](lab5/lab5_2_lab2.md)
     * [练习](lab5/lab5_2_1_exercises.md)
-    * [项目组成](lab5/lab5_2_2_files.md)
   * [用户进程管理](lab5/lab5_3_user_process.md)
     * [实验执行流程概述](lab5/lab5_3_1_lab_steps.md)
     * [创建用户进程](lab5/lab5_3_2_create_user_process.md)
