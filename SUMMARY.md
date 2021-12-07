@@ -104,8 +104,7 @@
       * [创建第0个内核线程idleproc](lab4/lab4_3_3_1_create_kthread_idleproc.md)
       * [创建第1个内核线程initproc](lab4/lab4_3_3_2_create_kthread_initproc.md)
       * [调度并执行内核线程initproc](lab4/lab4_3_3_3_sched_run_kthread.md)          
-  * [附录A：实验四的参考输出](lab4/lab4_5_appendix_a.md)
-  * [附录B：【原理】进程的属性与特征解析](lab4/lab4_6_appendix_b.md)
+  * [附录A：【原理】进程的属性与特征解析](lab4/lab4_5_appendix_a.md)
 
 ## Lab 5
 
@@ -158,7 +157,6 @@
       * [等待队列](lab7/lab7_3_2_3_waitqueue.md)
     * [信号量](lab7/lab7_3_3_semaphore.md)
     * [管程和条件变量](lab7/lab7_3_4_monitors.md)
-  * [附录](lab7/lab7_5_appendix.md)
 
 ## Lab 8
 

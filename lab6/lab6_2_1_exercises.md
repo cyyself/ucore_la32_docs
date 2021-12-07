@@ -25,7 +25,9 @@
 * [strid-shed paper location2](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.138.3502&rank=1)
 * 也可GOOGLE “Stride Scheduling” 来查找相关资料
 
-执行：make grade。如果所显示的应用程序检测都输出ok，则基本正确。如果只是priority.c过不去，可执行 make run-priority 命令来单独调试它。大致执行结果可看附录。（ 使用的是 qemu-1.0.1 ）。
+完成代码编写后，编译并运行代码：make qemu -j 16
+
+如果可以得到如 编译方法所示的显示内容（仅供参考，不是标准答案输出），则基本正确。
 
 请在实验报告中简要说明你的设计实现过程。
 
