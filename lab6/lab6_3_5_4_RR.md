@@ -21,7 +21,7 @@ RR\_pick\_next的函数实现如下表所示。即选取就绪进程队列rq中�
 
 ```
 static struct proc_struct *
-FCFS_pick_next(struct run_queue *rq) {
+RR_pick_next(struct run_queue *rq) {
     list_entry_t *le = list_next(&(rq->run_list));
     if (le != &(rq->run_list)) {
         return le2proc(le, run_link);
@@ -34,7 +34,7 @@ RR\_dequeue的函数实现如下表所示。即把就绪进程队列rq的进程�
 
 ```
 static void
-FCFS_dequeue(struct run_queue *rq, struct proc_struct *proc) {
+RR_dequeue(struct run_queue *rq, struct proc_struct *proc) {
     assert(!list_empty(&(proc->run_link)) && proc->rq == rq);
     list_del_init(&(proc->run_link));
     rq->proc_num --;

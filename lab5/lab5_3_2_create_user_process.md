@@ -20,10 +20,11 @@ int main(void) {
 
 hello应用程序只是输出一些字符串，并通过系统调用sys\_getpid（在getpid函数中调用）输出代表hello应用程序执行的用户进程的进程标识--pid。
 
-首先，我们需要了解ucore操作系统如何能够找到hello应用程序。这需要分析ucore和hello是如何编译的。修改Makefile，把第六行注释掉。然后在本实验源码目录下执行make，可得到如下输出：
+首先，我们需要了解ucore操作系统如何能够找到hello应用程序。这需要分析ucore和hello是如何编译的。在本实验源码目录下执行make，可得到如下输出：
 
 ```
 ……
+
 + cc user/hello.c
 
 loongarch32-linux-gnu-gcc -c  -Iuser/libs -Ikern/include -fno-builtin-fprintf -fno-builtin -nostdlib  -nostdinc -g -G0 -Wa,-O0 -fno-pic -mno-shared -msoft-float -ggdb -gstabs -mlcsr   user/hello.c  -o obj/user/hello.o
@@ -74,12 +75,12 @@ a00b4ac0 _binary_obj_user_hello_start
 
 #### 2. 用户进程的虚拟地址空间 
 
-在tools/user.ld描述了用户程序的用户虚拟空间的执行入口虚拟地址：
+在user/libs/user.ld描述了用户程序的用户虚拟空间的执行入口虚拟地址：
 
 ```
 SECTIONS {
     /* Load programs at this address: "." means the current address */
-    . = 0x800020;
+    . = 0x10000000;
 ```
 
 在tools/kernel.ld描述了操作系统的内核虚拟空间的起始入口虚拟地址：
@@ -87,7 +88,7 @@ SECTIONS {
 ```
 SECTIONS {
     /* Load the kernel at this address: "." means the current address */
-    . = 0xC0100000;
+    . = 0xa0000000;
 ```
 
 这样ucore把用户进程的虚拟地址空间分了两块，一块与内核线程一样，是所有用户进程都共享的内核虚拟地址空间，映射到同样的物理内存空间中，这样在物理内存中只需放置一份内核代码，使得用户进程从用户态进入核心态时，内核代码可以统一应对不同的内核程序；另外一块是用户虚拟地址空间，虽然虚拟地址范围一样，但映射到不同且没有交集的物理内存空间中。这样当ucore把用户进程的执行代码（即应用程序的执行代码）和数据（即应用程序的全局变量等）放到用户虚拟地址空间中时，确保了各个进程不会“非法”访问到其他进程的物理内存空间。
@@ -102,27 +103,19 @@ SECTIONS {
 
 ```
     // kernel_execve - do SYS_exec syscall to exec a user program called by user_main kernel_thread
-static int
-kernel_execve(const char *name, const char **argv) {
-    int argc = 0, ret;
-    while (argv[argc] != NULL) {
-        argc ++;
-    }
-    
-    //panic("unimpl");
-
+static int kernel_execve(const char *name, unsigned char *binary, size_t size) {
+    int ret, len = strlen(name);
     asm volatile(
-      "addi.w   $r4, $r0,%1;\n" // syscall no.
-      "move $r4, %2;\n"
-      "move $r5, %3;\n"
-      "move $r6, %4;\n"
-      "move $r7, %5;\n"
+      "addi.w   $a7, $zero,%1;\n" // syscall no.
+      "move $a0, %2;\n"
+      "move $a1, %3;\n"
+      "move $a2, %4;\n"
+      "move $a3, %5;\n"
       "syscall  0;\n"
-    //  "nop;\n"
-      "move %0, $r4;\n"
+      "move %0, $a7;\n"
       : "=r"(ret)
-      : "i"(SYSCALL_BASE+SYS_exec), "r"(name), "r"(argc), "r"(argv), "r"(argc) 
-      : "$r4", "$r5", "$r6", "$r7", "$r4"
+      : "i"(SYSCALL_BASE+SYS_exec), "r"(name), "r"(len), "r"(binary), "r"(size) 
+      : "a0", "a1", "a2", "a3", "a7"
     );
     return ret;
 }
