@@ -14,13 +14,13 @@ sudo apt install qemu-user qemu-user-static gcc-x86-64-linux-gnu binutils-x86-64
 
 对于大家熟悉的x86-64架构上的Ubuntu系统，可以依次执行以下命令完成Docker的安装：
 
-注意：其它Debian系发行版用户请正确将Ubuntu替换为你所使用的发行版，对于ARM处理器用户请将amd64替换为arm64（较老版本的树莓派为armhf）。
+注意：其它Debian系发行版用户请正确将Ubuntu替换为你所使用的发行版，对于ARM处理器用户请将`amd64`替换为`arm64`（较老版本的树莓派为`armhf`）。
 
 ```shell
 sudo apt-get install apt-transport-https ca-certificates curl gnupg2 software-properties-common
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
 sudo add-apt-repository \
-   "deb [arch=arm64] https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/debian \
+   "deb [arch=amd64] https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/debian \
    $(lsb_release -cs) \
    stable"
 sudo apt-get update

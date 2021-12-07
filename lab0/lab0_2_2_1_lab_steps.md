@@ -1,6 +1,8 @@
 
 #### 开发OS lab实验的简单步骤
 
-1. 使用git checkout 进入不同的实验分支，一共有8个实验，使用git checkout lab1可以进入实验一，若已有更改需要先进行git commit或加上-f参数放弃更改
-2. 使用代码编辑器填写对应的代码，然后使用make qemu运行。如果需要调试可以打开两个终端窗口，一个窗口执行make debug，另一个窗口执行make gdb。也欢迎寻找自己合适的工具使用，如tmux与screen。
-3. 观察实验结果。
+1. 按照每个实验指导书中的`编译方法`部分，将Makefile中的`LAB CONFIG`区域修改为当前实验需要的部分。
+2. 执行`make clean`
+3. 根据指导书，参阅uCore已有代码，了解uCore中一些模块的基本工作流程，然后完成每个练习的要求。
+4. 执行`make qemu -j 16`，运行当前实验，检查运行情况。
+5. 若运行不成功，可以分别在两个终端中使用`make debug`与`make gdb`，使用gdb对内核进行调试。
