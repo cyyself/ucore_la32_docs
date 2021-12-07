@@ -84,16 +84,12 @@
   * [实验目的](lab3/lab3_1_goals.md)
   * [实验内容](lab3/lab3_2_lab2.md)
     * [练习](lab3/lab3_2_1_exercises.md)
-    * [项目组成](lab3/lab3_2_2_files.md)
   * [虚拟内存管理](lab3/lab3_3_vmm.md)
     * [基本原理概述](lab3/lab3_3_1_vmm_principles.md)
     * [实验执行流程概述](lab3/lab3_3_2_labs_steps.md)
     * [关键数据结构和相关函数分析](lab3/lab3_3_3_data_structures.md)
-  * [Page Fault异常处理](lab3/lab3_4_page_fault_handler.md)
-  * [页面置换机制的实现](lab3/lab3_5_swapping.md)
-    * [页替换算法](lab3/lab3_5_1_page_swapping.md)
-    * [页面置换机制](lab3/lab3_5_2_page_swapping_principles.md)
-  * [实验报告要求](lab3/lab3_6_labs_requirement.md)
+  * [TLB Refill例外处理](lab3/lab3_4_tlbmiss_handler.md)
+  * [实验报告要求](lab3/lab3_5_labs_requirement.md)
 
 ## Lab 4
 
