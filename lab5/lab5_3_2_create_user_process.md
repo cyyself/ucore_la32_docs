@@ -26,12 +26,21 @@ hello应用程序只是输出一些字符串，并通过系统调用sys\_getpid�
 ……
 + cc user/hello.c
 
-gcc -Iuser/ -fno-builtin -Wall -ggdb -m32 -gstabs -nostdinc  -fno-stack-protector -Ilibs/ -Iuser/include/ -Iuser/libs/ -c user/hello.c -o obj/user/hello.o
+loongarch32-linux-gnu-gcc -c  -Iuser/libs -Ikern/include -fno-builtin-fprintf -fno-builtin -nostdlib  -nostdinc -g -G0 -Wa,-O0 -fno-pic -mno-shared -msoft-float -ggdb -gstabs -mlcsr   user/hello.c  -o obj/user/hello.o
 
-ld -m    elf_i386 -nostdlib -T tools/user.ld -o obj/__user_hello.out  obj/user/libs/initcode.o obj/user/libs/panic.o obj/user/libs/stdio.o obj/user/libs/syscall.o obj/user/libs/ulib.o obj/user/libs/umain.o  obj/libs/hash.o obj/libs/printfmt.o obj/libs/rand.o obj/libs/string.o obj/user/hello.o
+loongarch32-linux-gnu-ld -T user/libs/user.ld  obj/user/hello.o --whole-archive obj/user/libuser.a -o obj/user/hello
+
 ……
-ld -m    elf_i386 -nostdlib -T tools/kernel.ld -o bin/kernel  obj/kern/init/entry.o obj/kern/init/init.o …… -b binary …… obj/__user_hello.out
+
+sed 's/$FILE/hello/g' tools/piggy.S.in > obj/user/hello.S
+
 ……
+
+# 注意，可以观察obj/user/hello.S文件，这里有使用.incbin去引入先前编译好的obj/user/hello
+loongarch32-linux-gnu-gcc -c obj/user/hello.S -o obj/user/hello.piggy.o
+
+loongarch32-linux-gnu-ld -nostdlib -n -G 0 -static -T tools/kernel.ld  obj/init/init.o  …… obj/user/hello.piggy.o …… -o obj/ucore-kernel-piggy
+
 ```
 
 从中可以看出，hello应用程序不仅仅是hello.c，还包含了支持hello应用程序的用户态库：
@@ -47,7 +56,21 @@ ld -m    elf_i386 -nostdlib -T tools/kernel.ld -o bin/kernel  obj/kern/init/entr
 
 【注意】libs/\*.[ch]、user/libs/\*.[ch]、user/\*.[ch]的源码中没有任何特权指令。
 
-在make的最后一步执行了一个ld命令，把hello应用程序的执行码obj/\_\_user\_hello.out连接在了ucore kernel的末尾。且ld命令会在kernel中会把\_\_user\_hello.out的位置和大小记录在全局变量\_binary\_obj\_\_\_user\_hello\_out\_start和\_binary\_obj\_\_\_user\_hello\_out\_size中，这样这个hello用户程序就能够和ucore内核一起被 bootloader 加载到内存里中，并且通过这两个全局变量定位hello用户程序执行码的起始位置和大小。而到了与文件系统相关的实验后，ucore会提供一个简单的文件系统，那时所有的用户程序就都不再用这种方法进行加载了，而可以用大家熟悉的文件方式进行加载了。
+a00c3160 _binary_obj_user_hello_end
+a00125ac file_open
+a00018d0 strcpy
+a0000240 ide_device_valid
+a01455c0 _binary_obj_user_forktree_start
+a000cb30 wakeup_queue
+a00156f0 vfs_set_bootfs
+a000d12c cond_signal
+a0011850 sysfile_fsync
+a001a57c dev_init_stdout
+a00b4ac0 _binary_obj_user_hello_start
+
+在make的最后一步执行了一个ld命令，把hello应用程序的执行码obj/user/hello.piggy.o连接在了ucore kernel的末尾。并观察`tools/piggy.S.in`文件可以发现，我们定义了.global \_binary\_obj\_user\_$FILE\_start和.global \_binary\_obj\_user\_$FILE_end。这样这两个符号就会保留在最终ld生成的文件中，这样这个hello用户程序就能够和ucore内核一起被 bootloader 加载到内存里中，并且通过这两个全局变量定位hello用户程序执行码的起始位置和大小。而到了与文件系统相关的实验后，ucore会提供一个简单的文件系统，那时所有的用户程序就都不再用这种方法进行加载了，而可以用大家熟悉的文件方式进行加载了。
+
+（注，后续的文件系统采用initrd的方式，并非位于磁盘。）
 
 #### 2. 用户进程的虚拟地址空间 
 
