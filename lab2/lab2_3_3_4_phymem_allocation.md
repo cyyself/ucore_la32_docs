@@ -52,7 +52,7 @@ return NULL;
 ```
 这样可以确保分配不会超出范围。也可加一些assert函数，在有错误出现时，能够迅速发现。比如 n应该大于0，我们就可以加上
 ```c
-assert(n \> 0);
+assert(n > 0);
 ```
 这样在n<=0的情况下，ucore会迅速报错。firstfit需要从空闲链表头开始查找最小的地址，通过list\_next找到下一个空闲块元素，通过le2page宏可以由链表元素获得对应的Page指针p。通过p-\>property可以了解此空闲块的大小。如果\>=n，这就找到了！如果<n，则list\_next，继续查找。直到list\_next==
 &free\_list，这表示找完了一遍了。找到后，就要从新组织空闲块，然后把找到的page返回。所以default\_alloc\_pages可大致实现如下：
