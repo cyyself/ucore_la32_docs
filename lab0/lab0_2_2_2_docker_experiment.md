@@ -37,11 +37,10 @@ newgrp docker
 # 注：在注销重新登录之前，所有的操作都需要先执行newgrp docker，推荐在这一步完成之后重启电脑
 ```
 
-在Docker安装完成后，可以使用`docker load`来导入我们打包完成的运行环境。
+在Docker安装完成后，可以使用`docker pull chenyy/la32r-env`来导入我们打包完成的运行环境。
 
 ```shell
-cd $(存放la32-ucore-env.tgz的文件夹)
-docker load -i la32-ucore-env.tgz
+docker pull chenyy/la32r-env
 ```
 
 之后，我们可以使用docker run开始运行我们的容器了，这里我们还做了一步额外的操作是挂载当前系统的用户相关文件以及用户主目录，这样可以在容器内直接使用当前用户的主目录：
@@ -57,7 +56,7 @@ docker run -it \
     --volume="/etc/passwd:/etc/passwd:ro" \
     --volume="/etc/shadow:/etc/shadow:ro" \
     --volume="/etc/sudoers.d:/etc/sudoers.d:ro" \
-    la32-ucore-env
+    chenyy/la32r-env
 ```
 
 参数解释：
