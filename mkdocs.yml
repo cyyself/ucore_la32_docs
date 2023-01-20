@@ -1,0 +1,49 @@
+site_name: uCore for LoongArch32 Tutorial Book
+theme:
+  name: material
+  features:
+    - navigation.tabs
+  icon:
+    logo: material/memory
+nav:
+  - 主页: index.md
+  - 0：实验准备: lab0/lab0.md
+  - 1：系统软件: lab1/lab1.md
+  - 2：物理内存: lab2/lab2.md
+  - 3：虚拟内存: lab3/lab3.md
+  - 4：内核线程: lab4/lab4.md
+  - 5：用户进程: lab5/lab5.md
+  - 6：调度器: lab6/lab6.md
+  - 7：同步互斥: lab7/lab7.md
+  - 8：文件系统: lab8/lab8.md
+
+plugins:
+  - search
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+      linenums: true
+  - footnotes
+  - def_list
+  - meta
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:pymdownx.emoji.to_svg
+  - pymdownx.inlinehilite
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+repo_name: 'ucore_la32_docs'
+repo_url: 'https://github.com/cyyself/ucore_la32_docs'
