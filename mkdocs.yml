@@ -31,7 +31,12 @@ nav:
     - 虚拟内存: lab3/vmm.md
     - 编译方法: lab3/compile.md
     - 实验任务: lab3/task.md
-  - 4：内核线程: lab4/lab4.md
+  - 4：内核线程: 
+    - 关于实验: lab4/lab4.md
+    - 内核线程: lab4/kthread.md
+    - 编译方法: lab4/compile.md
+    - 实验任务: lab4/task.md
+    - 附录: lab4/appendix.md
   - 5：用户进程: lab5/lab5.md
   - 6：调度器: lab6/lab6.md
   - 7：同步互斥: lab7/lab7.md
