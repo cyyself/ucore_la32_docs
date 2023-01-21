@@ -70,6 +70,7 @@ nav:
 
 plugins:
   - search
+  - with-pdf
 markdown_extensions:
   - admonition
   - codehilite:
