@@ -50,7 +50,13 @@ nav:
     - Stride Scheduling: lab6/stride.md
     - 编译方法: lab6/compile.md
     - 实验任务: lab6/task.md
-  - 7：同步互斥: lab7/lab7.md
+  - 7：同步互斥:
+    - 关于实验: lab7/lab7.md
+    - 同步互斥的底层支撑: lab7/sync.md
+    - 信号量: lab7/semaphore.md
+    - 管程: lab7/monitors.md
+    - 编译方法: lab7/compile.md
+    - 实验任务: lab7/task.md
   - 8：文件系统: lab8/lab8.md
   - Chiplab: chiplab/chiplab.md
 

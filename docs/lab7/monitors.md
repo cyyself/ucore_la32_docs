@@ -13,7 +13,7 @@
 但在管程中仅仅有互斥操作是不够用的。进程可能需要等待某个条件Cond为真才能继续执行。如果采用[忙等](http://zh.wikipedia.org/w/index.php?title=%E5%BF%99%E7%AD%89%E5%BE%85&action=edit&redlink=1 "忙等待（页面不存在）")(busy
 waiting)方式：
 
-```
+```c
 while not( Cond ) do {}
 ```
 
@@ -99,7 +99,7 @@ typedef struct condvar{
 #### 条件变量的signal和wait的设计
 理解了数据结构的含义后，我们就可以开始管程的设计实现了。ucore设计实现了条件变量`wait_cv`操作和`signal_cv`操作对应的具体函数，即`cond_wait`函数和`cond_signal`函数，此外还有`cond_init`初始化函数（可直接看源码）。函数`cond_wait(condvar_t *cvp, semaphore_t *mp)`和`cond_signal (condvar_t *cvp)`的实现原理参考了《OS Concept》一书中的6.7.3小节“用信号量实现管程”的内容。首先来看`wait_cv`的原理实现：
 
-** wait_cv的原理描述 **
+wait_cv的原理描述
 
 ```c
 cv.count++;
@@ -142,7 +142,7 @@ if( cv.count > 0) {
 #### 管程中函数的入口出口设计
 为了让整个管程正常运行，还需在管程中的每个函数的入口和出口增加相关操作，即：
 
-```
+```c
 function_in_monitor （…）
 {
   sem.wait(monitor.mutex);
