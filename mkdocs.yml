@@ -43,7 +43,13 @@ nav:
     - 编译方法: lab5/compile.md
     - 实验任务: lab5/task.md
     - 附录: lab5/appendix.md
-  - 6：调度器: lab6/lab6.md
+  - 6：调度器:
+    - 关于实验: lab6/lab6.md
+    - 进程调度实现: lab6/sche_impl.md
+    - 调度器框架: lab6/framework.md
+    - Stride Scheduling: lab6/stride.md
+    - 编译方法: lab6/compile.md
+    - 实验任务: lab6/task.md
   - 7：同步互斥: lab7/lab7.md
   - 8：文件系统: lab8/lab8.md
   - Chiplab: chiplab/chiplab.md

@@ -21,7 +21,7 @@ loongarch32r-linux-gnusf-strip ucore-kernel-initrd
 
 1. 将开发板连上电脑，打开Vivado的Hardware Manager
 
-2. 下载[PMON文件](../static/gzrom-uart_div_18.bin)
+2. 下载PMON文件
 
     你也可以从[Chiplab文档](https://gitee.com/loongson-edu/chiplab/blob/chiplab_diff/docs/FPGA_run_linux/linux_run.md)中下载最新PMON文件。
 
