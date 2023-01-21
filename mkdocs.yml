@@ -37,7 +37,12 @@ nav:
     - 编译方法: lab4/compile.md
     - 实验任务: lab4/task.md
     - 附录: lab4/appendix.md
-  - 5：用户进程: lab5/lab5.md
+  - 5：用户进程:
+    - 关于实验: lab5/lab5.md
+    - 进程管理: lab5/process.md
+    - 编译方法: lab5/compile.md
+    - 实验任务: lab5/task.md
+    - 附录: lab5/appendix.md
   - 6：调度器: lab6/lab6.md
   - 7：同步互斥: lab7/lab7.md
   - 8：文件系统: lab8/lab8.md
