@@ -26,7 +26,11 @@ nav:
     - 分页机制: lab2/paging.md
     - 编译方法: lab2/compile.md
     - 实验任务: lab2/task.md
-  - 3：虚拟内存: lab3/lab3.md
+  - 3：虚拟内存: 
+    - 关于实验: lab3/lab3.md
+    - 虚拟内存: lab3/vmm.md
+    - 编译方法: lab3/compile.md
+    - 实验任务: lab3/task.md
   - 4：内核线程: lab4/lab4.md
   - 5：用户进程: lab5/lab5.md
   - 6：调度器: lab6/lab6.md
