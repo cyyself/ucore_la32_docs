@@ -12,10 +12,15 @@ nav:
     - 准备知识: lab0/prepare.md
     - 环境配置: lab0/env.md
     - 裸机程序: lab0/bare-prog.md
-    - 调试: lab0/debug.md
-    - 任务: lab0/task.md
+    - 调试方法: lab0/debug.md
+    - 实验任务: lab0/task.md
     - 参考: lab0/ref.md
-  - 1：系统软件: lab1/lab1.md
+  - 1：系统软件: 
+    - 关于实验: lab1/lab1.md
+    - 操作系统启动流程: lab1/booting.md
+    - 内联汇编: lab1/inline_asm.md
+    - 编译方法: lab1/compile.md
+    - 实验任务: lab1/task.md
   - 2：物理内存: lab2/lab2.md
   - 3：虚拟内存: lab3/lab3.md
   - 4：内核线程: lab4/lab4.md

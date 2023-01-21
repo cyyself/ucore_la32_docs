@@ -17,7 +17,7 @@ loongarch32r-linux-gnusf-strip ucore-kernel-initrd
 
 !!! warning
 
-    注意，Nexys 4 DDR开发板烧写SPI Flash的方式与龙芯杯开发板以及百芯计划开发板不同。请勿按照[官方流程](https://chiplab.readthedocs.io/zh/latest/FPGA_run_linux/flash.html)进行。
+    注意，Nexys 4 DDR开发板烧写SPI Flash的方式与龙芯杯开发板以及百芯计划开发板不同。如使用其他开发板请按照[官方流程](https://chiplab.readthedocs.io/zh/latest/FPGA_run_linux/flash.html)进行。
 
 1. 将开发板连上电脑，打开Vivado的Hardware Manager
 
