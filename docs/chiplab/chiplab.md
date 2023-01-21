@@ -29,7 +29,7 @@ loongarch32r-linux-gnusf-strip ucore-kernel-initrd
 
 4. 在弹出的窗口中搜索芯片`s25fl128sxxxxxx0-spi-x1_x2_x4`。
 
-5. 使用刚刚下载的PMON文件`gzrom-uart_div_18.bin`进行烧写。
+5. 使用刚刚下载的PMON文件`gzrom.bin`进行烧写。
 
 
 #### 3. 使用Vivado生成Chiplab的FPGA bit流。

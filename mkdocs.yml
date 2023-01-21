@@ -57,7 +57,15 @@ nav:
     - 管程: lab7/monitors.md
     - 编译方法: lab7/compile.md
     - 实验任务: lab7/task.md
-  - 8：文件系统: lab8/lab8.md
+  - 8：文件系统: 
+    - 关于实验: lab8/lab8.md
+    - 总体介绍: lab8/intro.md
+    - VFS: lab8/vfs.md
+    - 外设接口层: lab8/dev_file.md
+    - Simple File System: lab8/sfs.md
+    - 通用文件系统访问接口: lab8/interface.md
+    - 编译方法: lab8/compile.md
+    - 实验任务: lab8/task.md
   - Chiplab: chiplab/chiplab.md
 
 plugins:

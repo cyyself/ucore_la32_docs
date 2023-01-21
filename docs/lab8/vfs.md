@@ -1,9 +1,44 @@
-#### inode 接口 
+## 文件系统抽象层 - VFS
+
+文件系统抽象层是把不同文件系统的对外共性接口提取出来，形成一个函数指针数组，这样，通用文件系统访问接口层只需访问文件系统抽象层，而不需关心具体文件系统的实现细节和接口。
+
+### file & dir接口
+
+file&dir接口层定义了进程在内核中直接访问的文件相关信息，这定义在file数据结构中，具体描述如下：
+
+```c
+struct file {
+    enum {
+        FD_NONE, FD_INIT, FD_OPENED, FD_CLOSED,
+    } status;                         //访问文件的执行状态
+    bool readable;                    //文件是否可读
+    bool writable;                    //文件是否可写
+    int fd;                           //文件在filemap中的索引值
+    off_t pos;                        //访问文件的当前位置
+    struct inode *node;               //该文件对应的内存inode指针
+    int open_count;                   //打开此文件的次数
+};
+```
+
+而在kern/process/proc.h中的proc\_struct结构中描述了进程访问文件的数据接口files\_struct，其数据结构定义如下：
+
+```c
+struct files_struct {
+    struct inode *pwd;                //进程当前执行目录的内存inode指针
+    struct file *fd_array;            //进程打开文件的数组
+    atomic_t files_count;             //访问此文件的线程个数
+    semaphore_t files_sem;            //确保对进程控制块中fs_struct的互斥访问
+};
+```
+
+当创建一个进程后，该进程的files\_struct将会被初始化或复制父进程的files\_struct。当用户进程打开一个文件时，将从fd_array数组中取得一个空闲file项，然后会把此file的成员变量node指针指向一个代表此文件的inode的起始地址。
+
+### inode 接口 
 
 index
 node是位于内存的索引节点，它是VFS结构中的重要数据结构，因为它实际负责把不同文件系统的特定索引节点信息（甚至不能算是一个索引节点）统一封装起来，避免了进程直接访问具体文件系统。其定义如下：
 
-```
+```c
 struct inode {
     union {                                 //包含不同文件系统特定inode信息的union成员变量
         struct device __device_info;          //设备文件系统内存inode信息
@@ -22,7 +57,7 @@ struct inode {
 
 在inode中，有一成员变量为in\_ops，这是对此inode的操作函数指针列表，其数据结构定义如下：
 
-```
+```c
 struct inode_ops {
     unsigned long vop_magic;
     int (*vop_open)(struct inode *node, uint32_t open_flags);
