@@ -1,0 +1,1761 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../lab7/">
+      
+      
+        <link rel="next" href="../semaphore/">
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
+    
+    
+      
+        <title>同步互斥的底层支撑 - uCore for LoongArch32 Tutorial Book</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.558e4712.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.2505c338.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="uCore for LoongArch32 Tutorial Book" class="md-header__button md-logo" aria-label="uCore for LoongArch32 Tutorial Book" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 17H7V7h10m4 4V9h-2V7a2 2 0 0 0-2-2h-2V3h-2v2h-2V3H9v2H7c-1.11 0-2 .89-2 2v2H3v2h2v2H3v2h2v2a2 2 0 0 0 2 2h2v2h2v-2h2v2h2v-2h2a2 2 0 0 0 2-2v-2h2v-2h-2v-2m-6 2h-2v-2h2m2-2H9v6h6V9Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            uCore for LoongArch32 Tutorial Book
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              同步互斥的底层支撑
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/cyyself/ucore_la32_docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ucore_la32_docs
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../.." class="md-tabs__link">
+      主页
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab0/lab0/" class="md-tabs__link">
+        0：实验准备
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab1/lab1/" class="md-tabs__link">
+        1：系统软件
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab2/lab2/" class="md-tabs__link">
+        2：物理内存
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab3/lab3/" class="md-tabs__link">
+        3：虚拟内存
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab4/lab4/" class="md-tabs__link">
+        4：内核线程
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab5/lab5/" class="md-tabs__link">
+        5：用户进程
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab6/lab6/" class="md-tabs__link">
+        6：调度器
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../lab7/" class="md-tabs__link md-tabs__link--active">
+        7：同步互斥
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab8/lab8/" class="md-tabs__link">
+        8：文件系统
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../chiplab/chiplab/" class="md-tabs__link">
+      Chiplab
+    </a>
+  </li>
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="uCore for LoongArch32 Tutorial Book" class="md-nav__button md-logo" aria-label="uCore for LoongArch32 Tutorial Book" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 17H7V7h10m4 4V9h-2V7a2 2 0 0 0-2-2h-2V3h-2v2h-2V3H9v2H7c-1.11 0-2 .89-2 2v2H3v2h2v2H3v2h2v2a2 2 0 0 0 2 2h2v2h2v-2h2v2h2v-2h2a2 2 0 0 0 2-2v-2h2v-2h-2v-2m-6 2h-2v-2h2m2-2H9v6h6V9Z"/></svg>
+
+    </a>
+    uCore for LoongArch32 Tutorial Book
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/cyyself/ucore_la32_docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ucore_la32_docs
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        主页
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" tabindex="0" aria-expanded="false">
+          0：实验准备
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="0：实验准备" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          0：实验准备
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab0/lab0/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab0/prepare/" class="md-nav__link">
+        准备知识
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab0/env/" class="md-nav__link">
+        环境配置
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab0/bare-prog/" class="md-nav__link">
+        裸机程序
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab0/debug/" class="md-nav__link">
+        调试方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab0/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab0/ref/" class="md-nav__link">
+        参考
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" tabindex="0" aria-expanded="false">
+          1：系统软件
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="1：系统软件" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          1：系统软件
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab1/lab1/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab1/booting/" class="md-nav__link">
+        操作系统启动流程
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab1/inline_asm/" class="md-nav__link">
+        内联汇编
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab1/compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab1/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" tabindex="0" aria-expanded="false">
+          2：物理内存
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="2：物理内存" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          2：物理内存
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab2/lab2/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab2/paging/" class="md-nav__link">
+        分页机制
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab2/compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab2/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5" tabindex="0" aria-expanded="false">
+          3：虚拟内存
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="3：虚拟内存" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          3：虚拟内存
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab3/lab3/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab3/vmm/" class="md-nav__link">
+        虚拟内存
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab3/compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab3/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6" tabindex="0" aria-expanded="false">
+          4：内核线程
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="4：内核线程" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          4：内核线程
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab4/lab4/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab4/kthread/" class="md-nav__link">
+        内核线程
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab4/compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab4/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab4/appendix/" class="md-nav__link">
+        附录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7" tabindex="0" aria-expanded="false">
+          5：用户进程
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="5：用户进程" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          5：用户进程
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab5/lab5/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab5/process/" class="md-nav__link">
+        进程管理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab5/compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab5/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab5/appendix/" class="md-nav__link">
+        附录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8" tabindex="0" aria-expanded="false">
+          6：调度器
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="6：调度器" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          6：调度器
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab6/lab6/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab6/sche_impl/" class="md-nav__link">
+        进程调度实现
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab6/framework/" class="md-nav__link">
+        调度器框架
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab6/stride/" class="md-nav__link">
+        Stride Scheduling
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab6/compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab6/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_9" type="checkbox" id="__nav_9" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9" tabindex="0" aria-expanded="true">
+          7：同步互斥
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="7：同步互斥" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          7：同步互斥
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab7/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          同步互斥的底层支撑
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        同步互斥的底层支撑
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    同步互斥的底层支撑
+  </a>
+  
+    <nav class="md-nav" aria-label="同步互斥的底层支撑">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    定时器
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    屏蔽与使能中断
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    等待队列
+  </a>
+  
+    <nav class="md-nav" aria-label="等待队列">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    数据结构定义
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    相关函数说明
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    调用关系举例
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../semaphore/" class="md-nav__link">
+        信号量
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monitors/" class="md-nav__link">
+        管程
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10" tabindex="0" aria-expanded="false">
+          8：文件系统
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="8：文件系统" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          8：文件系统
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab8/lab8/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab8/intro/" class="md-nav__link">
+        总体介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab8/vfs/" class="md-nav__link">
+        VFS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab8/dev_file/" class="md-nav__link">
+        外设接口层
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab8/sfs/" class="md-nav__link">
+        Simple File System
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab8/interface/" class="md-nav__link">
+        通用文件系统访问接口
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab8/compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab8/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chiplab/chiplab/" class="md-nav__link">
+        Chiplab
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    同步互斥的底层支撑
+  </a>
+  
+    <nav class="md-nav" aria-label="同步互斥的底层支撑">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    定时器
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    屏蔽与使能中断
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    等待队列
+  </a>
+  
+    <nav class="md-nav" aria-label="等待队列">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    数据结构定义
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    相关函数说明
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    调用关系举例
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+
+  <h1>同步互斥的底层支撑</h1>
+
+<h2 id="_1">同步互斥的底层支撑<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>由于有处理器调度的存在，且进程在访问某类资源暂时无法满足的情况下，进程会进入等待状态。这导致了多进程执行时序的不确定性和潜在执行结果的不确定性。为了确保执行结果的正确性，本试验需要设计更加完善的进程等待和互斥的底层支撑机制，确保能正确提供基于信号量和条件变量的同步互斥机制。</p>
+<p>根据操作系统原理的知识，我们知道如果没有在硬件级保证读内存-修改值-写回内存的原子性，我们只能通过复杂的软件来实现同步互斥操作。但由于有定时器、屏蔽/使能中断、等待队列wait_queue支持test_and_set_bit等原子操作机器指令（在本次实验中没有用到）的存在，使得我们在实现进程等待、同步互斥上得到了极大的简化。下面将对定时器、屏蔽/使能中断和等待队列进行进一步讲解。</p>
+<h3 id="_2">定时器<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p>在传统的操作系统中，定时器是其中一个基础而重要的功能.它提供了基于时间事件的调度机制。在ucore 中，时钟（timer）中断给操作系统提供了有一定间隔的时间事件，操作系统将其作为基本的调度和计时单位（我们记两次时间中断之间的时间间隔为一个时间片，timer splice）。</p>
+<p>基于此时间单位，操作系统得以向上提供基于时间点的事件，并实现基于时间长度的睡眠等待和唤醒机制。在每个时钟中断发生时，操作系统产生对应的时间事件。应用程序或者操作系统的其他组件可以以此来构建更复杂和高级的进程管理和调度算法。</p>
+<ul>
+<li>sched.h, sched.c 定义了有关timer的各种相关接口来使用 timer 服务，其中主要包括:</li>
+<li>typedef struct {……} timer_t: 定义了 timer_t 的基本结构，其可以用 sched.h 中的timer_init函数对其进行初始化。</li>
+<li>void timer_init(timer t *timer, struct proc_struct *proc, int expires): 对某定时器 进行初始化，让它在 expires 时间片之后唤醒 proc
+进程。</li>
+<li>void add_timer(timer t *timer): 向系统添加某个初始化过的timer_t，该定时器在 指定时间后被激活，并将对应的进程唤醒至runnable（如果当前进程处在等待状态）。</li>
+<li>void del_timer(timer_t *time): 向系统删除（或者说取消）某一个定时器。该定时器在取消后不会被系统激活并唤醒进程。</li>
+<li>void run_timer_list(void): 更新当前系统时间点，遍历当前所有处在系统管理内的定时器，找出所有应该激活的计数器，并激活它们。该过程在且只在每次定时器中断时被调用。在ucore 中，其还会调用调度器事件处理程序。</li>
+</ul>
+<p>一个 timer_t 在系统中的存活周期可以被描述如下：</p>
+<ol>
+<li>timer_t 在某个位置被创建和初始化，并通过
+add_timer加入系统管理列表中</li>
+<li>系统时间被不断累加，直到 run_timer_list 发现该 timer_t到期。</li>
+<li>run_timer_list更改对应的进程状态，并从系统管理列表中移除该timer_t。</li>
+</ol>
+<p>尽管本次实验并不需要填充定时器相关的代码，但是作为系统重要的组件（同时定时器也是调度器的一个部分），你应该了解其相关机制和在ucore中的实现方法和使用方法。且在trap_dispatch函数中修改之前对时钟中断的处理，使得ucore能够利用定时器提供的功能完成调度和睡眠唤醒等操作。</p>
+<h3 id="_3">屏蔽与使能中断<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>根据操作系统原理的知识，我们知道如果没有在硬件级保证读内存-修改值-写回内存的原子性，我们只能通过复杂的软件来实现同步互斥操作，而在内核中，我们必须保证临界区的内存修改不会被中断打断，因此需要操作屏蔽与使能中断。</p>
+<p>在ucore中提供的底层机制包括中断屏蔽/使能控制等。kern/sync.c中实现的开关中断的控制函数local_intr_save(x)和local_intr_restore(x)，它们是基于kern/driver文件下的intr_enable()、intr_disable()函数实现的。具体调用关系为：</p>
+<div class="highlight"><pre><span></span><code><span class="n">关中断</span><span class="err">：</span><span class="n">local_intr_save</span><span class="w"> </span><span class="o">--&gt;</span><span class="w"> </span><span class="n">__intr_save</span><span class="w"> </span><span class="o">--&gt;</span><span class="w"> </span><span class="n">intr_disable</span><span class="w"> </span><span class="o">--&gt;</span><span class="w"> </span><span class="n">__lcsr_csrxchg</span><span class="p">(</span><span class="n">LISA_CSR_CRMD_IE</span><span class="p">,</span><span class="w"> </span><span class="n">LISA_CSR_CRMD_IE</span><span class="p">,</span><span class="w"> </span><span class="n">LISA_CSR_CRMD</span><span class="p">)</span>
+<span class="n">开中断</span><span class="err">：</span><span class="n">local_intr_restore</span><span class="o">--&gt;</span><span class="w"> </span><span class="n">__intr_restore</span><span class="w"> </span><span class="o">--&gt;</span><span class="w"> </span><span class="n">intr_enable</span><span class="w"> </span><span class="o">--&gt;</span><span class="w"> </span><span class="n">__lcsr_csrxchg</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">LISA_CSR_CRMD_IE</span><span class="p">,</span><span class="w"> </span><span class="n">LISA_CSR_CRMD</span><span class="p">)</span>
+</code></pre></div>
+<p>在LoongArch32架构中，中断的开关是通过修改CSR.CRMD寄存器中的IE位来实现的，最终实现了关（屏蔽）中断和开（使能）中断。通过关闭中断，可以防止对当前执行的控制流被其他中断事件处理所打断。既然不能中断，那也就意味着在内核运行的当前进程无法被打断或被重新调度，即实现了对临界区的互斥操作。所以在单处理器情况下，可以通过开关中断实现对临界区的互斥保护，需要互斥的临界区代码的一般写法为：</p>
+<div class="highlight"><pre><span></span><code><span class="n">local_intr_save</span><span class="p">(</span><span class="n">intr_flag</span><span class="p">);</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">临界区代码</span>
+<span class="p">}</span>
+<span class="n">local_intr_restore</span><span class="p">(</span><span class="n">intr_flag</span><span class="p">);</span>
+<span class="err">……</span>
+</code></pre></div>
+<p>由于目前ucore只实现了对单处理器的支持，所以通过这种方式，就可简单地支撑互斥操作了。在多处理器情况下，这种方法是无法实现互斥的，因为屏蔽了一个CPU的中断，只能阻止本地CPU上的进程不会被中断或调度，并不意味着其他CPU上执行的进程不能执行临界区的代码。所以，开关中断只对单处理器下的互斥操作起作用。在本实验中，开关中断机制是实现信号量等高层同步互斥原语的底层支撑基础之一。</p>
+<h3 id="_4">等待队列<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>到目前为止，我们的实验中，用户进程或内核线程还没有睡眠的支持机制。在课程中提到用户进程或内核线程可以转入等待状态以等待某个特定事件（比如睡眠,等待子进程结束,等待信号量等），当该事件发生时这些进程能够被再次唤醒。内核实现这一功能的一个底层支撑机制就是等待队列wait_queue，等待队列和每一个事件（睡眠结束、时钟到达、任务完成、资源可用等）联系起来。需要等待事件的进程在转入休眠状态后插入到等待队列中。当事件发生之后，内核遍历相应等待队列，唤醒休眠的用户进程或内核线程，并设置其状态为就绪状态（PROC_RUNNABLE），并将该进程从等待队列中清除。ucore在kern/sync/{ wait.h, wait.c
+}中实现了等待项wait结构和等待队列wait
+queue结构以及相关函数），这是实现ucore中的信号量机制和条件变量机制的基础，进入wait
+queue的进程会被设为等待状态（PROC_SLEEPING），直到他们被唤醒。</p>
+<h4 id="_5">数据结构定义<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code>typedef  struct {
+    struct proc_struct *proc;     //等待进程的指针
+    uint32_t wakeup_flags;        //进程被放入等待队列的原因标记
+    wait_queue_t *wait_queue;     //指向此wait结构所属于的wait_queue
+    list_entry_t wait_link;       //用来组织wait_queue中wait节点的连接
+} wait_t;
+
+typedef struct {
+    list_entry_t wait_head;       //wait_queue的队头
+} wait_queue_t;
+
+le2wait(le, member)               //实现wait_t中成员的指针向wait_t 指针的转化
+</code></pre></div>
+<h4 id="_6">相关函数说明<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h4>
+<p>与wait和wait queue相关的函数主要分为两层，底层函数是对wait queue的初始化、插入、删除和查找操作，相关函数如下：</p>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="nf">wait_init</span><span class="p">(</span><span class="n">wait_t</span><span class="w"> </span><span class="o">*</span><span class="n">wait</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">proc_struct</span><span class="w"> </span><span class="o">*</span><span class="n">proc</span><span class="p">);</span><span class="w">    </span><span class="c1">//初始化wait结构</span>
+<span class="kt">bool</span><span class="w"> </span><span class="nf">wait_in_queue</span><span class="p">(</span><span class="n">wait_t</span><span class="w"> </span><span class="o">*</span><span class="n">wait</span><span class="p">);</span><span class="w">                          </span><span class="c1">//wait是否在wait queue中</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">wait_queue_init</span><span class="p">(</span><span class="n">wait_queue_t</span><span class="w"> </span><span class="o">*</span><span class="n">queue</span><span class="p">);</span><span class="w">                 </span><span class="c1">//初始化wait_queue结构</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">wait_queue_add</span><span class="p">(</span><span class="n">wait_queue_t</span><span class="w"> </span><span class="o">*</span><span class="n">queue</span><span class="p">,</span><span class="w"> </span><span class="n">wait_t</span><span class="w"> </span><span class="o">*</span><span class="n">wait</span><span class="p">);</span><span class="w">    </span><span class="c1">//把wait前插到wait queue中</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">wait_queue_del</span><span class="p">(</span><span class="n">wait_queue_t</span><span class="w"> </span><span class="o">*</span><span class="n">queue</span><span class="p">,</span><span class="w"> </span><span class="n">wait_t</span><span class="w"> </span><span class="o">*</span><span class="n">wait</span><span class="p">);</span><span class="w">    </span><span class="c1">//从wait queue中删除wait</span>
+<span class="n">wait_t</span><span class="w"> </span><span class="o">*</span><span class="nf">wait_queue_next</span><span class="p">(</span><span class="n">wait_queue_t</span><span class="w"> </span><span class="o">*</span><span class="n">queue</span><span class="p">,</span><span class="w"> </span><span class="n">wait_t</span><span class="w"> </span><span class="o">*</span><span class="n">wait</span><span class="p">);</span><span class="c1">//取得wait的后一个链接指针</span>
+<span class="n">wait_t</span><span class="w"> </span><span class="o">*</span><span class="nf">wait_queue_prev</span><span class="p">(</span><span class="n">wait_queue_t</span><span class="w"> </span><span class="o">*</span><span class="n">queue</span><span class="p">,</span><span class="w"> </span><span class="n">wait_t</span><span class="w"> </span><span class="o">*</span><span class="n">wait</span><span class="p">);</span><span class="c1">//取得wait的前一个链接指针</span>
+<span class="n">wait_t</span><span class="w"> </span><span class="o">*</span><span class="nf">wait_queue_first</span><span class="p">(</span><span class="n">wait_queue_t</span><span class="w"> </span><span class="o">*</span><span class="n">queue</span><span class="p">);</span><span class="w">             </span><span class="c1">//取得wait queue的第一个wait</span>
+<span class="n">wait_t</span><span class="w"> </span><span class="o">*</span><span class="nf">wait_queue_last</span><span class="p">(</span><span class="n">wait_queue_t</span><span class="w"> </span><span class="o">*</span><span class="n">queue</span><span class="p">);</span><span class="w">              </span><span class="c1">//取得wait queue的最后一个wait</span>
+<span class="kt">bool</span><span class="w"> </span><span class="nf">wait_queue_empty</span><span class="p">(</span><span class="n">wait_queue_t</span><span class="w"> </span><span class="o">*</span><span class="n">queue</span><span class="p">);</span><span class="w">                </span><span class="c1">//wait queue是否为空</span>
+</code></pre></div>
+<p>高层函数基于底层函数实现了让进程进入等待队列--<code>wait_current_set</code>，以及从等待队列中唤醒进程--<code>wakeup_wait</code>，相关函数如下：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">//让wait与进程关联，且让当前进程关联的wait进入等待队列queue，当前进程睡眠</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">wait_current_set</span><span class="p">(</span><span class="n">wait_queue_t</span><span class="w"> </span><span class="o">*</span><span class="n">queue</span><span class="p">,</span><span class="w"> </span><span class="n">wait_t</span><span class="w"> </span><span class="o">*</span><span class="n">wait</span><span class="p">,</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">wait_state</span><span class="p">);</span>
+<span class="c1">//把与当前进程关联的wait从等待队列queue中删除</span>
+<span class="n">wait_current_del</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span><span class="w"> </span><span class="n">wait</span><span class="p">);</span>
+<span class="c1">//唤醒与wait关联的进程</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">wakeup_wait</span><span class="p">(</span><span class="n">wait_queue_t</span><span class="w"> </span><span class="o">*</span><span class="n">queue</span><span class="p">,</span><span class="w"> </span><span class="n">wait_t</span><span class="w"> </span><span class="o">*</span><span class="n">wait</span><span class="p">,</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">wakeup_flags</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">del</span><span class="p">);</span>
+<span class="c1">//唤醒等待队列上挂着的第一个wait所关联的进程</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">wakeup_first</span><span class="p">(</span><span class="n">wait_queue_t</span><span class="w"> </span><span class="o">*</span><span class="n">queue</span><span class="p">,</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">wakeup_flags</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">del</span><span class="p">);</span>
+<span class="c1">//唤醒等待队列上所有的等待的进程</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">wakeup_queue</span><span class="p">(</span><span class="n">wait_queue_t</span><span class="w"> </span><span class="o">*</span><span class="n">queue</span><span class="p">,</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">wakeup_flags</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">del</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="_7">调用关系举例<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p>如下图所示，对于唤醒进程的函数<code>wakeup_wait</code>，可以看到它会被各种信号量的V操作函数<code>up</code>调用，并且它会调用<code>wait_queue_del</code>函数和<code>wakup_proc</code>函数来完成唤醒进程的操作。</p>
+<p><img alt="wakeup_wait" src="../../lab7_figs/wakeup_wait.svg" /></p>
+<p>如下图所示，而对于让进程进入等待状态的函数<code>wait_current_set</code>，可以看到它会被各种信号量的P操作函数｀down<code>调用，并且它会调用</code>wait_init<code>完成对等待项的初始化，并进一步调用</code>wait_queue_add`来把与要处于等待状态的进程所关联的等待项挂到与信号量绑定的等待队列中。</p>
+<p><img alt="wait_current_set" src="../../lab7_figs/wait_current_set.svg" /></p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs"], "search": "../../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.51d95adb.min.js"></script>
+      
+    
+  </body>
+</html>

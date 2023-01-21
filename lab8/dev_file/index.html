@@ -1,0 +1,1748 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../vfs/">
+      
+      
+        <link rel="next" href="../sfs/">
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
+    
+    
+      
+        <title>外设接口层 - uCore for LoongArch32 Tutorial Book</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.558e4712.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.2505c338.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#io" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="uCore for LoongArch32 Tutorial Book" class="md-header__button md-logo" aria-label="uCore for LoongArch32 Tutorial Book" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 17H7V7h10m4 4V9h-2V7a2 2 0 0 0-2-2h-2V3h-2v2h-2V3H9v2H7c-1.11 0-2 .89-2 2v2H3v2h2v2H3v2h2v2a2 2 0 0 0 2 2h2v2h2v-2h2v2h2v-2h2a2 2 0 0 0 2-2v-2h2v-2h-2v-2m-6 2h-2v-2h2m2-2H9v6h6V9Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            uCore for LoongArch32 Tutorial Book
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              外设接口层
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/cyyself/ucore_la32_docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ucore_la32_docs
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../.." class="md-tabs__link">
+      主页
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab0/lab0/" class="md-tabs__link">
+        0：实验准备
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab1/lab1/" class="md-tabs__link">
+        1：系统软件
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab2/lab2/" class="md-tabs__link">
+        2：物理内存
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab3/lab3/" class="md-tabs__link">
+        3：虚拟内存
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab4/lab4/" class="md-tabs__link">
+        4：内核线程
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab5/lab5/" class="md-tabs__link">
+        5：用户进程
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab6/lab6/" class="md-tabs__link">
+        6：调度器
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab7/lab7/" class="md-tabs__link">
+        7：同步互斥
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../lab8/" class="md-tabs__link md-tabs__link--active">
+        8：文件系统
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../chiplab/chiplab/" class="md-tabs__link">
+      Chiplab
+    </a>
+  </li>
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="uCore for LoongArch32 Tutorial Book" class="md-nav__button md-logo" aria-label="uCore for LoongArch32 Tutorial Book" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 17H7V7h10m4 4V9h-2V7a2 2 0 0 0-2-2h-2V3h-2v2h-2V3H9v2H7c-1.11 0-2 .89-2 2v2H3v2h2v2H3v2h2v2a2 2 0 0 0 2 2h2v2h2v-2h2v2h2v-2h2a2 2 0 0 0 2-2v-2h2v-2h-2v-2m-6 2h-2v-2h2m2-2H9v6h6V9Z"/></svg>
+
+    </a>
+    uCore for LoongArch32 Tutorial Book
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/cyyself/ucore_la32_docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ucore_la32_docs
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        主页
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" tabindex="0" aria-expanded="false">
+          0：实验准备
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="0：实验准备" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          0：实验准备
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab0/lab0/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab0/prepare/" class="md-nav__link">
+        准备知识
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab0/env/" class="md-nav__link">
+        环境配置
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab0/bare-prog/" class="md-nav__link">
+        裸机程序
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab0/debug/" class="md-nav__link">
+        调试方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab0/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab0/ref/" class="md-nav__link">
+        参考
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" tabindex="0" aria-expanded="false">
+          1：系统软件
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="1：系统软件" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          1：系统软件
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab1/lab1/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab1/booting/" class="md-nav__link">
+        操作系统启动流程
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab1/inline_asm/" class="md-nav__link">
+        内联汇编
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab1/compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab1/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" tabindex="0" aria-expanded="false">
+          2：物理内存
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="2：物理内存" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          2：物理内存
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab2/lab2/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab2/paging/" class="md-nav__link">
+        分页机制
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab2/compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab2/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5" tabindex="0" aria-expanded="false">
+          3：虚拟内存
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="3：虚拟内存" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          3：虚拟内存
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab3/lab3/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab3/vmm/" class="md-nav__link">
+        虚拟内存
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab3/compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab3/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6" tabindex="0" aria-expanded="false">
+          4：内核线程
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="4：内核线程" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          4：内核线程
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab4/lab4/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab4/kthread/" class="md-nav__link">
+        内核线程
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab4/compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab4/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab4/appendix/" class="md-nav__link">
+        附录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7" tabindex="0" aria-expanded="false">
+          5：用户进程
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="5：用户进程" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          5：用户进程
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab5/lab5/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab5/process/" class="md-nav__link">
+        进程管理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab5/compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab5/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab5/appendix/" class="md-nav__link">
+        附录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8" tabindex="0" aria-expanded="false">
+          6：调度器
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="6：调度器" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          6：调度器
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab6/lab6/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab6/sche_impl/" class="md-nav__link">
+        进程调度实现
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab6/framework/" class="md-nav__link">
+        调度器框架
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab6/stride/" class="md-nav__link">
+        Stride Scheduling
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab6/compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab6/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9" tabindex="0" aria-expanded="false">
+          7：同步互斥
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="7：同步互斥" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          7：同步互斥
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab7/lab7/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab7/sync/" class="md-nav__link">
+        同步互斥的底层支撑
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab7/semaphore/" class="md-nav__link">
+        信号量
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab7/monitors/" class="md-nav__link">
+        管程
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab7/compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab7/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_10" type="checkbox" id="__nav_10" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10" tabindex="0" aria-expanded="true">
+          8：文件系统
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="8：文件系统" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          8：文件系统
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab8/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../intro/" class="md-nav__link">
+        总体介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vfs/" class="md-nav__link">
+        VFS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          外设接口层
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        外设接口层
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#io" class="md-nav__link">
+    设备层文件 IO 层
+  </a>
+  
+    <nav class="md-nav" aria-label="设备层文件 IO 层">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    关键数据结构
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdout" class="md-nav__link">
+    stdout设备文件
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdin" class="md-nav__link">
+    stdin 设备文件
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sfs/" class="md-nav__link">
+        Simple File System
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interface/" class="md-nav__link">
+        通用文件系统访问接口
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chiplab/chiplab/" class="md-nav__link">
+        Chiplab
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#io" class="md-nav__link">
+    设备层文件 IO 层
+  </a>
+  
+    <nav class="md-nav" aria-label="设备层文件 IO 层">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    关键数据结构
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdout" class="md-nav__link">
+    stdout设备文件
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stdin" class="md-nav__link">
+    stdin 设备文件
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+
+  <h1>外设接口层</h1>
+
+<h2 id="io">设备层文件 IO 层<a class="headerlink" href="#io" title="Permanent link">&para;</a></h2>
+<p>在本实验中，为了统一地访问设备，我们可以把一个设备看成一个文件，通过访问文件的接口来访问设备。目前实现了stdin设备文件文件、stdout设备文件、disk0设备。stdin设备就是串口，stdout设备就是CONSOLE，而disk0设备是承载SFS文件系统的磁盘设备（尽管它是一个内存模拟的磁盘）。下面我们逐一分析ucore是如何让用户把设备看成文件来访问。</p>
+<h3 id="_1">关键数据结构<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<p>为了表示一个设备，需要有对应的数据结构，ucore为此定义了struct device，其描述如下：</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">size_t</span><span class="w"> </span><span class="n">d_blocks</span><span class="p">;</span><span class="w">    </span><span class="c1">//设备占用的数据块个数            </span>
+<span class="w">    </span><span class="kt">size_t</span><span class="w"> </span><span class="n">d_blocksize</span><span class="p">;</span><span class="w">  </span><span class="c1">//数据块的大小</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">d_open</span><span class="p">)(</span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">open_flags</span><span class="p">);</span><span class="w">  </span><span class="c1">//打开设备的函数指针</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">d_close</span><span class="p">)(</span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">);</span><span class="w"> </span><span class="c1">//关闭设备的函数指针</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">d_io</span><span class="p">)(</span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">iobuf</span><span class="w"> </span><span class="o">*</span><span class="n">iob</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">write</span><span class="p">);</span><span class="w"> </span><span class="c1">//读写设备的函数指针</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">d_ioctl</span><span class="p">)(</span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">data</span><span class="p">);</span><span class="w"> </span><span class="c1">//用ioctl方式控制设备的函数指针</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>这个数据结构能够支持对块设备（比如磁盘）、字符设备（比如串口）的表示，完成对设备的基本操作。ucore虚拟文件系统为了把这些设备链接在一起，还定义了一个设备链表，即双向链表vdev_list，这样通过访问此链表，可以找到ucore能够访问的所有设备文件。</p>
+<p>但这个设备描述没有与文件系统以及表示一个文件的inode数据结构建立关系，为此，还需要另外一个数据结构把device和inode联通起来，这就是vfs_dev_t数据结构：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// device info entry in vdev_list </span>
+<span class="k">typedef</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">devname</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">inode</span><span class="w"> </span><span class="o">*</span><span class="n">devnode</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">fs</span><span class="w"> </span><span class="o">*</span><span class="n">fs</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">mountable</span><span class="p">;</span>
+<span class="w">    </span><span class="n">list_entry_t</span><span class="w"> </span><span class="n">vdev_link</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="n">vfs_dev_t</span><span class="p">;</span>
+</code></pre></div>
+<p>利用vfs_dev_t数据结构，就可以让文件系统通过一个链接vfs_dev_t结构的双向链表找到device对应的inode数据结构，一个inode节点的成员变量in_type的值是0x1234，则此 inode的成员变量in_info将成为一个device结构。这样inode就和一个设备建立了联系，这个inode就是一个设备文件。</p>
+<h3 id="stdout">stdout设备文件<a class="headerlink" href="#stdout" title="Permanent link">&para;</a></h3>
+<p><strong>初始化</strong></p>
+<p>既然stdout设备是设备文件系统的文件，自然有自己的inode结构。在系统初始化时，即只需如下处理过程</p>
+<div class="highlight"><pre><span></span><code>kern_init--&gt;fs_init--&gt;dev_init--&gt;dev_init_stdout --&gt; dev_create_inode
+                 --&gt; stdout_device_init
+                 --&gt; vfs_add_dev
+</code></pre></div>
+<p>在dev_init_stdout中完成了对stdout设备文件的初始化。即首先创建了一个inode，然后通过stdout_device_init完成对inode中的成员变量inode->__device_info进行初始：</p>
+<p>这里的stdout设备文件实际上就是指的console外设（它其实是串口、并口和CGA的组合型外设）。这个设备文件是一个只写设备，如果读这个设备，就会出错。接下来我们看看stdout设备的相关处理过程。</p>
+<p><strong>初始化</strong></p>
+<p>stdout设备文件的初始化过程主要由stdout_device_init完成，其具体实现如下：</p>
+<div class="highlight"><pre><span></span><code><span class="k">static</span><span class="w"> </span><span class="kt">void</span>
+<span class="nf">stdout_device_init</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">d_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">d_blocksize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">d_open</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stdout_open</span><span class="p">;</span>
+<span class="w">    </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">d_close</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stdout_close</span><span class="p">;</span>
+<span class="w">    </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">d_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stdout_io</span><span class="p">;</span>
+<span class="w">    </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">d_ioctl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stdout_ioctl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>可以看到，stdout_open函数完成设备文件打开工作，如果发现用户进程调用open函数的参数flags不是只写（O_WRONLY），则会报错。</p>
+<p><strong>访问操作实现</strong></p>
+<p>stdout_io函数完成设备的写操作工作，具体实现如下：</p>
+<div class="highlight"><pre><span></span><code><span class="k">static</span><span class="w"> </span><span class="kt">int</span>
+<span class="nf">stdout_io</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">iobuf</span><span class="w"> </span><span class="o">*</span><span class="n">iob</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">write</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">write</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iob</span><span class="o">-&gt;</span><span class="n">io_base</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(;</span><span class="w"> </span><span class="n">iob</span><span class="o">-&gt;</span><span class="n">io_resid</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">iob</span><span class="o">-&gt;</span><span class="n">io_resid</span><span class="w"> </span><span class="o">--</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">kputchar</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="w"> </span><span class="o">++</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="n">E_INVAL</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>可以看到，要写的数据放在iob->io_base所指的内存区域，一直写到iob->io_resid的值为0为止。每次写操作都是通过cputchar来完成的，此函数最终将通过console外设驱动来完成把数据输出到串口、并口和CGA显示器上过程。另外，也可以注意到，如果用户想执行读操作，则stdout_io函数直接返回错误值**-**E_INVAL。</p>
+<h3 id="stdin">stdin 设备文件<a class="headerlink" href="#stdin" title="Permanent link">&para;</a></h3>
+<p>这里的stdin设备文件实际上就是指的串口输入。这个设备文件是一个只读设备，如果写这个设备，就会出错。接下来我们看看stdin设备的相关处理过程。</p>
+<p><strong>初始化</strong></p>
+<p>stdin设备文件的初始化过程主要由stdin_device_init完成了主要的初始化工作，具体实现如下：</p>
+<div class="highlight"><pre><span></span><code><span class="k">static</span><span class="w"> </span><span class="kt">void</span>
+<span class="nf">stdin_device_init</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">d_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">d_blocksize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">d_open</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stdin_open</span><span class="p">;</span>
+<span class="w">    </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">d_close</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stdin_close</span><span class="p">;</span>
+<span class="w">    </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">d_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stdin_io</span><span class="p">;</span>
+<span class="w">    </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">d_ioctl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stdin_ioctl</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">p_rpos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p_wpos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">wait_queue_init</span><span class="p">(</span><span class="n">wait_queue</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>相对于stdout的初始化过程，stdin的初始化相对复杂一些，多了一个stdin_buffer缓冲区，描述缓冲区读写位置的变量p_rpos、p_wpos以及用于等待缓冲区的等待队列wait_queue。在stdin_device_init函数的初始化中，也完成了对p_rpos、p_wpos和wait_queue的初始化。</p>
+<p><strong>访问操作实现</strong></p>
+<p>stdin_io函数负责完成设备的读操作工作，具体实现如下：</p>
+<div class="highlight"><pre><span></span><code><span class="k">static</span><span class="w"> </span><span class="kt">int</span>
+<span class="nf">stdin_io</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">iobuf</span><span class="w"> </span><span class="o">*</span><span class="n">iob</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">write</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">write</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dev_stdin_read</span><span class="p">(</span><span class="n">iob</span><span class="o">-&gt;</span><span class="n">io_base</span><span class="p">,</span><span class="w"> </span><span class="n">iob</span><span class="o">-&gt;</span><span class="n">io_resid</span><span class="p">))</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">iob</span><span class="o">-&gt;</span><span class="n">io_resid</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="n">E_INVAL</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>可以看到，如果是写操作，则stdin_io函数直接报错返回。所以这也进一步说明了此设备文件是只读文件。如果此读操作，则此函数进一步调用dev_stdin_read函数完成对串口设备的读入操作。dev_stdin_read函数的实现相对复杂一些，主要的流程如下：</p>
+<div class="highlight"><pre><span></span><code><span class="k">static</span><span class="w"> </span><span class="kt">int</span>
+<span class="nf">dev_stdin_read</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">intr_flag</span><span class="p">;</span>
+<span class="w">    </span><span class="n">local_intr_save</span><span class="p">(</span><span class="n">intr_flag</span><span class="p">);</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(;</span><span class="w"> </span><span class="n">ret</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">len</span><span class="p">;</span><span class="w"> </span><span class="n">ret</span><span class="w"> </span><span class="o">++</span><span class="p">,</span><span class="w"> </span><span class="n">p_rpos</span><span class="w"> </span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nl">try_again</span><span class="p">:</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p_rpos</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">p_wpos</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="o">*</span><span class="n">buf</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stdin_buffer</span><span class="p">[</span><span class="n">p_rpos</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">stdin_BUFSIZE</span><span class="p">];</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">wait_t</span><span class="w"> </span><span class="n">__wait</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">wait</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">__wait</span><span class="p">;</span>
+<span class="w">                </span><span class="n">wait_current_set</span><span class="p">(</span><span class="n">wait_queue</span><span class="p">,</span><span class="w"> </span><span class="n">wait</span><span class="p">,</span><span class="w"> </span><span class="n">WT_KBD</span><span class="p">);</span>
+<span class="w">                </span><span class="n">local_intr_restore</span><span class="p">(</span><span class="n">intr_flag</span><span class="p">);</span>
+
+<span class="w">                </span><span class="n">schedule</span><span class="p">();</span>
+
+<span class="w">                </span><span class="n">local_intr_save</span><span class="p">(</span><span class="n">intr_flag</span><span class="p">);</span>
+<span class="w">                </span><span class="n">wait_current_del</span><span class="p">(</span><span class="n">wait_queue</span><span class="p">,</span><span class="w"> </span><span class="n">wait</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">wait</span><span class="o">-&gt;</span><span class="n">wakeup_flags</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">WT_KBD</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">goto</span><span class="w"> </span><span class="n">try_again</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">local_intr_restore</span><span class="p">(</span><span class="n">intr_flag</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>在上述函数中可以看出，如果p_rpos &lt; p_wpos，则表示有串口输入的新字符在stdin_buffer中，于是就从stdin_buffer中取出新字符放到iobuf指向的缓冲区中；如果p_rpos >=p_wpos，则表明没有新字符，这样调用read用户态库函数的用户进程就需要采用等待队列的睡眠操作进入睡眠状态，等待串口输入字符的产生。</p>
+<p>串口输入字符后，如何唤醒等待串口输入的用户进程呢？回顾lab1中的外设中断处理，可以了解到，当用户在QEMU程序中输入字符时，会产生串口中断，在trap_dispatch函数中，当识别出中断是串口中断时，会调用dev_stdin_write函数，来把字符写入到stdin_buffer中，且会通过等待队列的唤醒操作唤醒正在等待串口输入的用户进程。</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs"], "search": "../../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.51d95adb.min.js"></script>
+      
+    
+  </body>
+</html>

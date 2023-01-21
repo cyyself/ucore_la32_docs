@@ -1,0 +1,2151 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../lab5/">
+      
+      
+        <link rel="next" href="../compile/">
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
+    
+    
+      
+        <title>进程管理 - uCore for LoongArch32 Tutorial Book</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.558e4712.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.2505c338.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="uCore for LoongArch32 Tutorial Book" class="md-header__button md-logo" aria-label="uCore for LoongArch32 Tutorial Book" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 17H7V7h10m4 4V9h-2V7a2 2 0 0 0-2-2h-2V3h-2v2h-2V3H9v2H7c-1.11 0-2 .89-2 2v2H3v2h2v2H3v2h2v2a2 2 0 0 0 2 2h2v2h2v-2h2v2h2v-2h2a2 2 0 0 0 2-2v-2h2v-2h-2v-2m-6 2h-2v-2h2m2-2H9v6h6V9Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            uCore for LoongArch32 Tutorial Book
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              进程管理
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/cyyself/ucore_la32_docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ucore_la32_docs
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../.." class="md-tabs__link">
+      主页
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab0/lab0/" class="md-tabs__link">
+        0：实验准备
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab1/lab1/" class="md-tabs__link">
+        1：系统软件
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab2/lab2/" class="md-tabs__link">
+        2：物理内存
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab3/lab3/" class="md-tabs__link">
+        3：虚拟内存
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab4/lab4/" class="md-tabs__link">
+        4：内核线程
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../lab5/" class="md-tabs__link md-tabs__link--active">
+        5：用户进程
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab6/lab6/" class="md-tabs__link">
+        6：调度器
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab7/lab7/" class="md-tabs__link">
+        7：同步互斥
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../lab8/lab8/" class="md-tabs__link">
+        8：文件系统
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../chiplab/chiplab/" class="md-tabs__link">
+      Chiplab
+    </a>
+  </li>
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="uCore for LoongArch32 Tutorial Book" class="md-nav__button md-logo" aria-label="uCore for LoongArch32 Tutorial Book" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 17H7V7h10m4 4V9h-2V7a2 2 0 0 0-2-2h-2V3h-2v2h-2V3H9v2H7c-1.11 0-2 .89-2 2v2H3v2h2v2H3v2h2v2a2 2 0 0 0 2 2h2v2h2v-2h2v2h2v-2h2a2 2 0 0 0 2-2v-2h2v-2h-2v-2m-6 2h-2v-2h2m2-2H9v6h6V9Z"/></svg>
+
+    </a>
+    uCore for LoongArch32 Tutorial Book
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/cyyself/ucore_la32_docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ucore_la32_docs
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        主页
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" tabindex="0" aria-expanded="false">
+          0：实验准备
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="0：实验准备" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          0：实验准备
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab0/lab0/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab0/prepare/" class="md-nav__link">
+        准备知识
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab0/env/" class="md-nav__link">
+        环境配置
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab0/bare-prog/" class="md-nav__link">
+        裸机程序
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab0/debug/" class="md-nav__link">
+        调试方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab0/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab0/ref/" class="md-nav__link">
+        参考
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" tabindex="0" aria-expanded="false">
+          1：系统软件
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="1：系统软件" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          1：系统软件
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab1/lab1/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab1/booting/" class="md-nav__link">
+        操作系统启动流程
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab1/inline_asm/" class="md-nav__link">
+        内联汇编
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab1/compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab1/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" tabindex="0" aria-expanded="false">
+          2：物理内存
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="2：物理内存" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          2：物理内存
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab2/lab2/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab2/paging/" class="md-nav__link">
+        分页机制
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab2/compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab2/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5" tabindex="0" aria-expanded="false">
+          3：虚拟内存
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="3：虚拟内存" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          3：虚拟内存
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab3/lab3/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab3/vmm/" class="md-nav__link">
+        虚拟内存
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab3/compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab3/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6" tabindex="0" aria-expanded="false">
+          4：内核线程
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="4：内核线程" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          4：内核线程
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab4/lab4/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab4/kthread/" class="md-nav__link">
+        内核线程
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab4/compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab4/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab4/appendix/" class="md-nav__link">
+        附录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_7" type="checkbox" id="__nav_7" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7" tabindex="0" aria-expanded="true">
+          5：用户进程
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="5：用户进程" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          5：用户进程
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lab5/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          进程管理
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        进程管理
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    用户进程管理
+  </a>
+  
+    <nav class="md-nav" aria-label="用户进程管理">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    创建用户进程
+  </a>
+  
+    <nav class="md-nav" aria-label="创建用户进程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    1. 应用程序的组成和编译
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    2. 用户进程的虚拟地址空间
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    3. 创建并执行用户进程
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    进程退出和等待进程
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    系统调用实现
+  </a>
+  
+    <nav class="md-nav" aria-label="系统调用实现">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1_1" class="md-nav__link">
+    1. 建立系统调用的用户库准备
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2_1" class="md-nav__link">
+    2. 与用户进程相关的系统调用
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3_1" class="md-nav__link">
+    3. 系统调用的执行过程
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix/" class="md-nav__link">
+        附录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8" tabindex="0" aria-expanded="false">
+          6：调度器
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="6：调度器" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          6：调度器
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab6/lab6/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab6/sche_impl/" class="md-nav__link">
+        进程调度实现
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab6/framework/" class="md-nav__link">
+        调度器框架
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab6/stride/" class="md-nav__link">
+        Stride Scheduling
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab6/compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab6/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9" tabindex="0" aria-expanded="false">
+          7：同步互斥
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="7：同步互斥" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          7：同步互斥
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab7/lab7/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab7/sync/" class="md-nav__link">
+        同步互斥的底层支撑
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab7/semaphore/" class="md-nav__link">
+        信号量
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab7/monitors/" class="md-nav__link">
+        管程
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab7/compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab7/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10" tabindex="0" aria-expanded="false">
+          8：文件系统
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="8：文件系统" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          8：文件系统
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab8/lab8/" class="md-nav__link">
+        关于实验
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab8/intro/" class="md-nav__link">
+        总体介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab8/vfs/" class="md-nav__link">
+        VFS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab8/dev_file/" class="md-nav__link">
+        外设接口层
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab8/sfs/" class="md-nav__link">
+        Simple File System
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab8/interface/" class="md-nav__link">
+        通用文件系统访问接口
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab8/compile/" class="md-nav__link">
+        编译方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lab8/task/" class="md-nav__link">
+        实验任务
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chiplab/chiplab/" class="md-nav__link">
+        Chiplab
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    用户进程管理
+  </a>
+  
+    <nav class="md-nav" aria-label="用户进程管理">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    创建用户进程
+  </a>
+  
+    <nav class="md-nav" aria-label="创建用户进程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    1. 应用程序的组成和编译
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    2. 用户进程的虚拟地址空间
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    3. 创建并执行用户进程
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    进程退出和等待进程
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    系统调用实现
+  </a>
+  
+    <nav class="md-nav" aria-label="系统调用实现">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1_1" class="md-nav__link">
+    1. 建立系统调用的用户库准备
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2_1" class="md-nav__link">
+    2. 与用户进程相关的系统调用
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3_1" class="md-nav__link">
+    3. 系统调用的执行过程
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+
+  <h1>进程管理</h1>
+
+<h2 id="_1">用户进程管理<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h3 id="_2">创建用户进程<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p>在实验四中，我们已经完成了对内核线程的创建，但与用户进程的创建过程相比，创建内核线程的过程还远远不够。而这两个创建过程的差异本质上就是用户进程和内核线程的差异决定的。</p>
+<h4 id="1">1. 应用程序的组成和编译<a class="headerlink" href="#1" title="Permanent link">&para;</a></h4>
+<p>我们首先来看一个应用程序，这里我们假定是hello应用程序，在user/hello.c中实现，代码如下：</p>
+<div class="highlight"><pre><span></span><code>#include &lt;stdio.h&gt;
+#include &lt;ulib.h&gt;
+
+int main(void) {
+    cprintf(&quot;Hello world!!.\n&quot;);
+    cprintf(&quot;I am process %d.\n&quot;, getpid());
+    cprintf(&quot;hello pass.\n&quot;);
+    return 0;
+}
+</code></pre></div>
+<p>hello应用程序只是输出一些字符串，并通过系统调用sys_getpid（在getpid函数中调用）输出代表hello应用程序执行的用户进程的进程标识--pid。</p>
+<p>首先，我们需要了解ucore操作系统如何能够找到hello应用程序。这需要分析ucore和hello是如何编译的。在本实验源码目录下执行make，可得到如下输出：</p>
+<div class="highlight"><pre><span></span><code>……
+
++ cc user/hello.c
+
+loongarch32-linux-gnu-gcc -c  -Iuser/libs -Ikern/include -fno-builtin-fprintf -fno-builtin -nostdlib  -nostdinc -g -G0 -Wa,-O0 -fno-pic -mno-shared -msoft-float -ggdb -gstabs -mlcsr   user/hello.c  -o obj/user/hello.o
+
+loongarch32-linux-gnu-ld -T user/libs/user.ld  obj/user/hello.o --whole-archive obj/user/libuser.a -o obj/user/hello
+
+……
+
+sed &#39;s/$FILE/hello/g&#39; tools/piggy.S.in &gt; obj/user/hello.S
+
+……
+
+# 注意，可以观察obj/user/hello.S文件，这里有使用.incbin去引入先前编译好的obj/user/hello
+loongarch32-linux-gnu-gcc -c obj/user/hello.S -o obj/user/hello.piggy.o
+
+loongarch32-linux-gnu-ld -nostdlib -n -G 0 -static -T tools/kernel.ld  obj/init/init.o  …… obj/user/hello.piggy.o …… -o obj/ucore-kernel-piggy
+</code></pre></div>
+<p>从中可以看出，hello应用程序不仅仅是hello.c，还包含了支持hello应用程序的用户态库：</p>
+<ul>
+<li>user/libs/initcode.S：所有应用程序的起始用户态执行地址“_start”，调整了gp和sp后，调用umain函数。</li>
+<li>user/libs/umain.c：实现了umain函数，这是所有应用程序执行的第一个C函数，它将调用应用程序的main函数，并在main函数结束后调用exit函数，而exit函数最终将调用sys_exit系统调用，让操作系统回收进程资源。</li>
+<li>user/libs/ulib.[ch]：实现了最小的C函数库，除了一些与系统调用无关的函数，其他函数是对访问系统调用的包装。</li>
+<li>user/libs/syscall.[ch]：用户层发出系统调用的具体实现。</li>
+<li>user/libs/stdio.c：实现cprintf函数，通过系统调用sys_putc来完成字符输出。</li>
+<li>user/libs/panic.c：实现__panic/__warn函数，通过系统调用sys_exit完成用户进程退出。</li>
+</ul>
+<p>除了这些用户态库函数实现外，还有一些libs/*.[ch]是操作系统内核和应用程序共用的函数实现。这些用户库函数其实在本质上与UNIX系统中的标准libc没有区别，只是实现得很简单，但hello应用程序的正确执行离不开这些库函数。</p>
+<p>【注意】libs/*.[ch]、user/libs/*.[ch]、user/*.[ch]的源码中没有任何特权指令。</p>
+<p>a00c3160 _binary_obj_user_hello_end
+a00125ac file_open
+a00018d0 strcpy
+a0000240 ide_device_valid
+a01455c0 _binary_obj_user_forktree_start
+a000cb30 wakeup_queue
+a00156f0 vfs_set_bootfs
+a000d12c cond_signal
+a0011850 sysfile_fsync
+a001a57c dev_init_stdout
+a00b4ac0 _binary_obj_user_hello_start</p>
+<p>在make的最后一步执行了一个ld命令，把hello应用程序的执行码obj/user/hello.piggy.o连接在了ucore kernel的末尾。并观察<code>tools/piggy.S.in</code>文件可以发现，我们定义了.global _binary_obj_user_<span class="arithmatex"><span class="MathJax_Preview">FILE\_start和.global \_binary\_obj\_user\_</span><script type="math/tex">FILE\_start和.global \_binary\_obj\_user\_</script></span>FILE_end。这样这两个符号就会保留在最终ld生成的文件中，这样这个hello用户程序就能够和ucore内核一起被 bootloader 加载到内存里中，并且通过这两个全局变量定位hello用户程序执行码的起始位置和大小。而到了与文件系统相关的实验后，ucore会提供一个简单的文件系统，那时所有的用户程序就都不再用这种方法进行加载了，而可以用大家熟悉的文件方式进行加载了。</p>
+<p>（注，后续的文件系统采用initrd的方式，并非位于磁盘。）</p>
+<h4 id="2">2. 用户进程的虚拟地址空间<a class="headerlink" href="#2" title="Permanent link">&para;</a></h4>
+<p>在user/libs/user.ld描述了用户程序的用户虚拟空间的执行入口虚拟地址：</p>
+<div class="highlight"><pre><span></span><code>SECTIONS {
+    /* Load programs at this address: &quot;.&quot; means the current address */
+    . = 0x10000000;
+</code></pre></div>
+<p>在tools/kernel.ld描述了操作系统的内核虚拟空间的起始入口虚拟地址：</p>
+<div class="highlight"><pre><span></span><code>SECTIONS {
+    /* Load the kernel at this address: &quot;.&quot; means the current address */
+    . = 0xa0000000;
+</code></pre></div>
+<p>这样ucore把用户进程的虚拟地址空间分了两块，一块与内核线程一样，是所有用户进程都共享的内核虚拟地址空间，映射到同样的物理内存空间中，这样在物理内存中只需放置一份内核代码，使得用户进程从用户态进入核心态时，内核代码可以统一应对不同的内核程序；另外一块是用户虚拟地址空间，虽然虚拟地址范围一样，但映射到不同且没有交集的物理内存空间中。这样当ucore把用户进程的执行代码（即应用程序的执行代码）和数据（即应用程序的全局变量等）放到用户虚拟地址空间中时，确保了各个进程不会“非法”访问到其他进程的物理内存空间。</p>
+<p>这样ucore给一个用户进程具体设定的虚拟内存空间（kern/mm/memlayout.h）如下所示：</p>
+<p><img alt="image" src="../../lab5_figs/image001.png" /></p>
+<h4 id="3">3. 创建并执行用户进程<a class="headerlink" href="#3" title="Permanent link">&para;</a></h4>
+<p>在确定了用户进程的执行代码和数据，以及用户进程的虚拟空间布局后，我们可以来创建用户进程了。在本实验中第一个用户进程是由第二个内核线程initproc通过把hello应用程序执行码覆盖到initproc的用户虚拟内存空间来创建的，相关代码如下所示：</p>
+<div class="highlight"><pre><span></span><code>    // kernel_execve - do SYS_exec syscall to exec a user program called by user_main kernel_thread
+static int kernel_execve(const char *name, unsigned char *binary, size_t size) {
+    int ret, len = strlen(name);
+    asm volatile(
+      &quot;addi.w   $a7, $zero,%1;\n&quot; // syscall no.
+      &quot;move $a0, %2;\n&quot;
+      &quot;move $a1, %3;\n&quot;
+      &quot;move $a2, %4;\n&quot;
+      &quot;move $a3, %5;\n&quot;
+      &quot;syscall  0;\n&quot;
+      &quot;move %0, $a7;\n&quot;
+      : &quot;=r&quot;(ret)
+      : &quot;i&quot;(SYSCALL_BASE+SYS_exec), &quot;r&quot;(name), &quot;r&quot;(len), &quot;r&quot;(binary), &quot;r&quot;(size) 
+      : &quot;a0&quot;, &quot;a1&quot;, &quot;a2&quot;, &quot;a3&quot;, &quot;a7&quot;
+    );
+    return ret;
+}
+
+#define __KERNEL_EXECVE(name, path, ...) ({                         \
+const char *argv[] = {path, ##__VA_ARGS__, NULL};       \
+                     kprintf(&quot;kernel_execve: pid = %d, name = \&quot;%s\&quot;.\n&quot;,    \
+                             current-&gt;pid, name);                            \
+                     kernel_execve(name, argv);                              \
+})
+
+#define KERNEL_EXECVE(x, ...)                   __KERNEL_EXECVE(#x, #x, ##__VA_ARGS__)
+……
+// init_main - the second kernel thread used to create kswapd_main &amp; user_main kernel threads
+static int
+init_main(void *arg) {
+    #ifdef TEST
+    KERNEL_EXECVE2(TEST, TESTSTART, TESTSIZE);
+    #else
+    KERNEL_EXECVE(hello);
+    #endif
+    panic(&quot;kernel_execve failed.\n&quot;);
+    return 0;
+}
+</code></pre></div>
+<p>对于上述代码，我们需要从后向前按照函数/宏的实现一个一个来分析。Initproc的执行主体是init_main函数，这个函数在缺省情况下是执行宏KERNEL_EXECVE(hello)，而这个宏最终是调用kernel_execve函数来调用SYS_exec系统调用，由于ld在链接hello应用程序执行码时定义了两全局变量：</p>
+<ul>
+<li>_binary_obj___user_hello_out_start：hello执行码的起始位置</li>
+<li>_binary_obj___user_hello_out_size中：hello执行码的大小</li>
+</ul>
+<p>kernel_execve把这两个变量作为SYS_exec系统调用的参数，让ucore来创建此用户进程。当ucore收到此系统调用后，将依次调用如下函数</p>
+<div class="highlight"><pre><span></span><code>vector128(vectors.S)--\&gt;
+\_\_alltraps(trapentry.S)--\&gt;trap(trap.c)--\&gt;trap\_dispatch(trap.c)--
+--\&gt;syscall(syscall.c)--\&gt;sys\_exec（syscall.c）--\&gt;do\_execve(proc.c)
+</code></pre></div>
+<p>最终通过do_execve函数来完成用户进程的创建工作。此函数的主要工作流程如下：</p>
+<ul>
+<li>
+<p>首先为加载新的执行码做好用户态内存空间清空准备。如果mm不为NULL，则设置页表为内核空间页表，且进一步判断mm的引用计数减1后是否为0，如果为0，则表明没有进程再需要此进程所占用的内存空间，为此将根据mm中的记录，释放进程所占用户空间内存和进程页表本身所占空间。最后把当前进程的mm内存管理指针为空。由于此处的initproc是内核线程，所以mm为NULL，整个处理都不会做。</p>
+</li>
+<li>
+<p>接下来的一步是加载应用程序执行码到当前进程的新创建的用户态虚拟空间中。这里涉及到读ELF格式的文件，申请内存空间，建立用户态虚存空间，加载应用程序执行码等。load_icode函数完成了整个复杂的工作。</p>
+</li>
+</ul>
+<p>load_icode函数的主要工作就是给用户进程建立一个能够让用户进程正常运行的用户环境。此函数有一百多行，完成了如下重要工作：</p>
+<ol>
+<li>
+<p>调用mm_create函数来申请进程的内存管理数据结构mm所需内存空间，并对mm进行初始化；</p>
+</li>
+<li>
+<p>调用setup_pgdir来申请一个页目录表所需的一个页大小的内存空间，并把描述ucore内核虚空间映射的内核页表（boot_pgdir所指）的内容拷贝到此新目录表中，最后让mm->pgdir指向此页目录表，这就是进程新的页目录表了，且能够正确映射内核虚空间；</p>
+</li>
+<li>
+<p>根据应用程序执行码的起始位置来解析此ELF格式的执行程序，并调用mm_map函数根据ELF格式的执行程序说明的各个段（代码段、数据段、BSS段等）的起始位置和大小建立对应的vma结构，并把vma插入到mm结构中，从而表明了用户进程的合法用户态虚拟地址空间；</p>
+</li>
+<li>
+<p>调用根据执行程序各个段的大小分配物理内存空间，并根据执行程序各个段的起始位置确定虚拟地址，并在页表中建立好物理地址和虚拟地址的映射关系，然后把执行程序各个段的内容拷贝到相应的内核虚拟地址中，至此应用程序执行码和数据已经根据编译时设定地址放置到虚拟内存中了；</p>
+</li>
+<li>
+<p>需要给用户进程设置用户栈，为此调用mm_mmap函数建立用户栈的vma结构，明确用户栈的位置在用户虚空间的顶端，大小为256个页，即1MB，并分配一定数量的物理内存且建立好栈的虚地址&larr;>物理地址映射关系；</p>
+</li>
+<li>
+<p>至此,进程内的内存管理vma和mm数据结构已经建立完成，于是把mm->pgdir赋值到变量current_pgdir中，即更新了用户进程的虚拟内存空间，此时的initproc已经被hello的代码和数据覆盖，成为了第一个用户进程，但此时这个用户进程的执行现场还没建立好；</p>
+</li>
+<li>
+<p>先清空进程的中断帧，再重新设置进程的中断帧，使得在执行中断返回指令后，能够让CPU转到用户态特权级，并回到用户态内存空间，且能够跳转到用户进程的第一条指令执行，并确保在用户态能够响应中断；</p>
+</li>
+</ol>
+<p>至此，用户进程的用户环境已经搭建完毕。此时initproc将按产生系统调用的函数调用路径原路返回，执行中断返回指令“ertn”（位于exception.S的最后一句）后，将切换到用户进程hello的第一条语句位置_start处（位于user/libs/initcode.S的第三句）开始执行。</p>
+<h3 id="_3">进程退出和等待进程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>当进程执行完它的工作后，就需要执行退出操作，释放进程占用的资源。ucore分了两步来完成这个工作，首先由进程本身完成大部分资源的占用内存回收工作，然后由此进程的父进程完成剩余资源占用内存的回收工作。为何不让进程本身完成所有的资源回收工作呢？这是因为进程要执行回收操作，就表明此进程还存在，还在执行指令，这就需要内核栈的空间不能释放，且表示进程存在的进程控制块不能释放。所以需要父进程来帮忙释放子进程无法完成的这两个资源回收工作。</p>
+<p>为此在用户态的函数库中提供了exit函数，此函数最终访问sys_exit系统调用接口让操作系统来帮助当前进程执行退出过程中的部分资源回收。我们来看看ucore是如何做进程退出工作的。</p>
+<p>首先，exit函数会把一个退出码error_code传递给ucore，ucore通过执行内核函数do_exit来完成对当前进程的退出处理，主要工作简单地说就是回收当前进程所占的大部分内存资源，并通知父进程完成最后的回收工作，具体流程如下：</p>
+<p><strong>1.</strong> 如果current->mm != NULL，表示是用户进程，则开始回收此用户进程所占用的用户态虚拟内存空间；</p>
+<p>a)
+首先执行“lcr3(boot_cr3)”，切换到内核态的页表上，这样当前用户进程目前只能在内核虚拟地址空间执行了，这是为了确保后续释放用户态内存和进程页表的工作能够正常执行；</p>
+<p>b)
+如果当前进程控制块的成员变量mm的成员变量mm_count减1后为0（表明这个mm没有再被其他进程共享，可以彻底释放进程所占的用户虚拟空间了。），则开始回收用户进程所占的内存资源：</p>
+<p>i.
+调用exit_mmap函数释放current->mm->vma链表中每个vma描述的进程合法空间中实际分配的内存，然后把对应的页表项内容清空，最后还把页表所占用的空间释放并把对应的页目录表项清空；</p>
+<p>ii. 调用put_pgdir函数释放当前进程的页目录所占的内存；</p>
+<p>iii. 调用mm_destroy函数释放mm中的vma所占内存，最后释放mm所占内存；</p>
+<p>c)
+此时设置current->mm为NULL，表示与当前进程相关的用户虚拟内存空间和对应的内存管理成员变量所占的内核虚拟内存空间已经回收完毕；</p>
+<p><strong>2.</strong>
+这时，设置当前进程的执行状态current->state=PROC_ZOMBIE，当前进程的退出码current->exit_code=error_code。此时当前进程已经不能被调度了，需要此进程的父进程来做最后的回收工作（即回收描述此进程的内核栈和进程控制块）；</p>
+<p><strong>3.</strong> 如果当前进程的父进程current->parent处于等待子进程状态：</p>
+<p>current->parent->wait_state==WT_CHILD，</p>
+<p>则唤醒父进程（即执行“wakup_proc(current->parent)”），让父进程帮助自己完成最后的资源回收；</p>
+<p><strong>4.</strong>
+如果当前进程还有子进程，则需要把这些子进程的父进程指针设置为内核线程initproc，且各个子进程指针需要插入到initproc的子进程链表中。如果某个子进程的执行状态是PROC_ZOMBIE，则需要唤醒initproc来完成对此子进程的最后回收工作。</p>
+<p><strong>5.</strong> 执行schedule()函数，选择新的进程执行。</p>
+<p>那么父进程如何完成对子进程的最后回收工作呢？这要求父进程要执行wait用户函数或wait_pid用户函数，这两个函数的区别是，wait函数等待任意子进程的结束通知，而wait_pid函数等待进程id号为pid的子进程结束通知。这两个函数最终访问sys_wait系统调用接口让ucore来完成对子进程的最后回收工作，即回收子进程的内核栈和进程控制块所占内存空间，具体流程如下：</p>
+<p><strong>1.</strong>
+如果pid!=0，表示只找一个进程id号为pid的退出状态的子进程，否则找任意一个处于退出状态的子进程；</p>
+<p><strong>2.</strong>
+如果此子进程的执行状态不为PROC_ZOMBIE，表明此子进程还没有退出，则当前进程只好设置自己的执行状态为PROC_SLEEPING，睡眠原因为WT_CHILD（即等待子进程退出），调用schedule()函数选择新的进程执行，自己睡眠等待，如果被唤醒，则重复跳回步骤1处执行；</p>
+<p><strong>3.</strong>
+如果此子进程的执行状态为PROC_ZOMBIE，表明此子进程处于退出状态，需要当前进程（即子进程的父进程）完成对子进程的最终回收工作，即首先把子进程控制块从两个进程队列proc_list和hash_list中删除，并释放子进程的内核堆栈和进程控制块。自此，子进程才彻底地结束了它的执行过程，消除了它所占用的所有资源。</p>
+<h3 id="_4">系统调用实现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>系统调用的英文名字是System Call。操作系统为什么需要实现系统调用呢？其实这是实现了用户进程后，自然引申出来需要实现的操作系统功能。用户进程只能在操作系统给它圈定好的“用户环境”中执行，但“用户环境”限制了用户进程能够执行的指令，即用户进程只能执行一般的指令，无法执行特权指令。如果用户进程想执行一些需要特权指令的任务，比如通过网卡发网络包等，只能让操作系统来代劳了。于是就需要一种机制来确保用户进程不能执行特权指令，但能够请操作系统“帮忙”完成需要特权指令的任务，这种机制就是系统调用。</p>
+<p>采用系统调用机制为用户进程提供一个获得操作系统服务的统一接口层，这样一来可简化用户进程的实现，把一些共性的、繁琐的、与硬件相关、与特权指令相关的任务放到操作系统层来实现，但提供一个简洁的接口给用户进程调用；二来这层接口事先可规定好，且严格检查用户进程传递进来的参数和操作系统要返回的数据，使得让操作系统给用户进程服务的同时，保护操作系统不会被用户进程破坏。</p>
+<p>从硬件层面上看，需要硬件能够支持在用户态的用户进程通过某种机制切换到内核态。试验一讲述中断硬件支持和软件处理过程其实就可以用来完成系统调用所需的软硬件支持。下面我们来看看如何在ucore中实现系统调用。</p>
+<h4 id="1_1">1. 建立系统调用的用户库准备<a class="headerlink" href="#1_1" title="Permanent link">&para;</a></h4>
+<p>在操作系统中初始化好系统调用相关的中断描述符、中断处理起始地址等后，还需在用户态的应用程序中初始化好相关工作，简化应用程序访问系统调用的复杂性。为此在用户态建立了一个中间层，即简化的libc实现，在user/libs/ulib.[ch]和user/libs/syscall.[ch]中完成了对访问系统调用的封装。用户态最终的访问系统调用函数是syscall，实现如下：</p>
+<div class="highlight"><pre><span></span><code>static inline int
+syscall(int num, ...) {
+    va_list ap;
+    va_start(ap, num);
+    uint32_t arg[MAX_ARGS];
+    int i, ret;
+    for (i = 0; i &lt; MAX_ARGS; i ++) {
+        arg[i] = va_arg(ap, uint32_t);
+    }
+    va_end(ap);
+
+    num += SYSCALL_BASE;
+    asm volatile(
+      &quot;move $a7, %1;\n&quot; /* syscall no. */
+      &quot;move $a0, %2;\n&quot;
+      &quot;move $a1, %3;\n&quot;
+      &quot;move $a2, %4;\n&quot;
+      &quot;move $a3, %5;\n&quot;
+      &quot;syscall 0;\n&quot;
+      &quot;move %0, $a7;\n&quot;
+      : &quot;=r&quot;(ret)
+      : &quot;r&quot;(num), &quot;r&quot;(arg[0]), &quot;r&quot;(arg[1]), &quot;r&quot;(arg[2]), &quot;r&quot;(arg[3]) 
+      : &quot;a0&quot;, &quot;a1&quot;, &quot;a2&quot;, &quot;a3&quot;, &quot;a7&quot;
+    );
+    return ret;
+}
+</code></pre></div>
+<h4 id="2_1">2. 与用户进程相关的系统调用<a class="headerlink" href="#2_1" title="Permanent link">&para;</a></h4>
+<p>在本实验中，与进程相关的各个系统调用属性如下所示：</p>
+<table>
+<tr><td>系统调用名</td><td>含义</td><td>具体完成服务的函数</td></tr>
+<tr><td>SYS_exit</td><td>process exit</td><td>do_exit</td></tr>
+<tr><td>SYS_fork</td><td>create child process, dup mm </td><td>do_fork-->wakeup_proc</td></tr>
+<tr><td>SYS_wait</td><td>wait child process</td><td>do_wait</td></tr>
+<tr><td>SYS_exec</td><td>after fork, process execute a new program</td><td>load a program and refresh the mm</td></tr>
+<tr><td>SYS_yield</td><td>process flag itself need resecheduling</td><td>proc->need_sched=1, then scheduler will rescheule this process</td></tr>
+<tr><td>SYS_kill</td><td>kill process</td><td>do_kill-->proc->flags |= PF_EXITING,                                                        -->wakeup_proc-->do_wait-->do_exit</td></tr>
+<tr><td>SYS_getpid</td><td>get the process's pid</td><td> </td></tr>
+</table>
+
+<p>通过这些系统调用，可方便地完成从进程/线程创建到退出的整个运行过程。</p>
+<h4 id="3_1">3. 系统调用的执行过程<a class="headerlink" href="#3_1" title="Permanent link">&para;</a></h4>
+<p>与用户态的函数库调用执行过程相比，系统调用执行过程的有四点主要的不同：</p>
+<ul>
+<li>通过“syscall”指令发起调用；</li>
+<li>通过“ertn”指令完成调用返回；</li>
+<li>当到达内核态后，操作系统需要严格检查系统调用传递的参数，确保不破坏整个系统的安全性；</li>
+<li>执行系统调用可导致进程等待某事件发生，从而可引起进程切换；</li>
+</ul>
+<p>下面我们以getpid系统调用的执行过程大致看看操作系统是如何完成整个执行过程的。当用户进程调用getpid函数，最终执行到“syscall”指令后，CPU根据操作系统建立的系统调用中断描述符，转入内核态，并跳转到exception13处（kern/trap/exception.S），开始了操作系统的系统调用执行过程，函数调用和返回操作的关系如下所示：</p>
+<div class="highlight"><pre><span></span><code>exception13(exception.S)--\&gt;
+\_\loongarch_trap(trap.c)--\&gt;trap\_dispatch(trap.c)--
+--\&gt;syscall(syscall.c)--\&gt;sys\_getpid(syscall.c)--\&gt;……--\&gt;\_\exception_return(exception.S)
+</code></pre></div>
+<p>在执行trap函数前，软件还需进一步保存执行系统调用前的执行现场，即把与用户进程继续执行所需的相关寄存器等当前内容保存到当前进程的中断帧trapframe中（注意，在创建进程是，把进程的trapframe放在给进程的内核栈分配的空间的顶部）。软件做的工作在exception.S的exception_handler函数部分：</p>
+<div class="highlight"><pre><span></span><code>exception_handler:
+    // Save t0 and t1
+    csrwr   t0, LISA_CSR_KS0
+    csrwr   t1, LISA_CSR_KS1
+    // Save previous stack pointer in t1
+    move    t1, sp
+    csrwr   t1, LISA_CSR_KS2
+    //t1 saved the vaual of KS2,KS2 saved sp
+    /*
+        Warning: csrwr will bring the old csr register value into rd, 
+        not only just write rd to csr register,
+        so you may see the rd changed.
+        It&#39;s documented in the manual from loongarch.
+    */
+
+    // check if user mode
+    csrrd   t0, LISA_CSR_PRMD  
+    andi    t0, t0, 3
+    beq     t0, zero, 1f
+
+
+    /* Coming from user mode - load kernel stack into sp */
+    la      t0, current // current pointer
+    ld.w    t0, t0, 0 // proc struct
+    ld.w    t0, t0, 12 // kstack pointer
+    addi.w  t1, zero, 1
+    slli.w  t1, t1, 13 // KSTACKSIZE=8192=pow(2,13)
+    add.w   sp, t0, t1
+    csrrd   t1, LISA_CSR_KS2
+
+1:
+    //saved EXST to t0 for save EXST to sp later(line 114) 
+    csrrd   t0, LISA_CSR_EXST
+    //return KS2
+    csrrd   t1, LISA_CSR_KS2
+    b common_exception
+
+
+common_exception:
+   /*
+    * At this point:
+    *      Interrupts are off. (The processor did this for us.)
+    *      t0 contains the exception status(like exception cause on MIPS).
+    *      t1 contains the old stack pointer.
+    *      sp points into the kernel stack.
+    *      All other registers are untouched.
+    */
+
+   /*
+    * Allocate stack space for 35 words to hold the trap frame,
+    * plus four more words for a minimal argument block.
+    */
+    addi.w  sp, sp, -156
+    st.w    s8, sp, 148
+    st.w    s7, sp, 144
+    st.w    s6, sp, 140
+    st.w    s5, sp, 136
+    st.w    s4, sp, 132
+    st.w    s3, sp, 128
+    st.w    s2, sp, 124
+    st.w    s1, sp, 120
+    st.w    s0, sp, 116
+    st.w    fp, sp, 112
+    st.w    reserved_reg, sp, 108
+    st.w    t8, sp, 104
+    st.w    t7, sp, 100
+    st.w    t6, sp, 96
+    st.w    t5, sp, 92
+    st.w    t4, sp, 88
+    st.w    t3, sp, 84
+    st.w    t2, sp, 80
+    //st.w    t1, sp, 76
+    //st.w    t0, sp, 72
+    st.w    a7, sp, 68
+    st.w    a6, sp, 64
+    st.w    a5, sp, 60
+    st.w    a4, sp, 56
+    st.w    a3, sp, 52
+    st.w    a2, sp, 48
+    st.w    a1, sp, 44
+    st.w    a0, sp, 40
+    st.w    t1, sp, 36  // replace sp with real sp, now use t1 for free
+    st.w    tp, sp, 32
+    // save real t0 and t1 after real sp (stored in t1 previously) stored
+    csrrd   t1, LISA_CSR_KS1
+    st.w    t1, sp, 76
+    csrrd   t1, LISA_CSR_KS0
+    st.w    t1, sp, 72
+
+    // replace with real value
+    // save tf_era after t0 and t1 saved
+    csrrd   t1, LISA_CSR_EPC
+    st.w    t1, sp, 152
+
+   /*
+    * Save remaining exception context information.
+    */
+
+    // save ra (note: not in pushregs, it&#39;s tf_ra)
+    st.w    ra, sp, 28
+    // save prmd
+    csrrd   t1, LISA_CSR_PRMD
+    st.w    t1, sp, 24
+    // save estat
+    st.w    t0, sp, 20
+    // now use t0 for free
+    // store badv
+    csrrd   t0, LISA_CSR_BADV
+    st.w    t0, sp, 16
+    st.w    zero, sp, 12
+    // support nested interrupt
+
+    // IE and PLV will automatically set to 0 when trap occur
+
+    // set trapframe as function argument
+    addi.w  a0, sp, 16
+    li  t0, 0xb0    # PLV=0, IE=0, PG=1
+    csrwr   t0, LISA_CSR_CRMD
+    la.abs  t0, loongarch_trap
+    jirl    ra, t0, 0
+    //bl loongarch_trap
+……
+</code></pre></div>
+<p>自此，用于保存用户态的用户进程执行现场的trapframe的内容填写完毕，操作系统可开始完成具体的系统调用服务。在sys_getpid函数中，简单地把当前进程的pid成员变量做为函数返回值就是一个具体的系统调用服务。完成服务后，操作系统按调用关系的路径原路返回到__exception.S中。然后操作系统开始根据当前进程的中断帧内容做恢复执行现场操作。其实就是把trapframe的一部分内容保存到寄存器内容。这是内核栈的结构如下：</p>
+<div class="highlight"><pre><span></span><code>exception_return:
+    // restore prmd
+    ld.w    t0, sp, 24
+    li      t1, 7
+    csrxchg t0, t1, LISA_CSR_PRMD
+    // restore era no k0 and k1 for la32, so must do first
+    ld.w    t0, sp, 152
+    csrwr   t0, LISA_CSR_EPC
+    // restore general registers
+    ld.w    ra, sp, 28
+    ld.w    tp, sp, 32
+    //ld.w    sp, sp, 36 (do it finally)
+    ld.w    a0, sp, 40
+    ld.w    a1, sp, 44
+    ld.w    a2, sp, 48
+    ld.w    a3, sp, 52
+    ld.w    a4, sp, 56
+    ld.w    a5, sp, 60
+    ld.w    a6, sp, 64
+    ld.w    a7, sp, 68
+    ld.w    t0, sp, 72
+    ld.w    t1, sp, 76
+    ld.w    t2, sp, 80
+    ld.w    t3, sp, 84
+    ld.w    t4, sp, 88
+    ld.w    t5, sp, 92
+    ld.w    t6, sp, 96
+    ld.w    t7, sp, 100
+    ld.w    t8, sp, 104
+    ld.w    reserved_reg, sp, 108
+    ld.w    fp, sp, 112
+    ld.w    s0, sp, 116
+    ld.w    s1, sp, 120
+    ld.w    s2, sp, 124
+    ld.w    s3, sp, 128
+    ld.w    s4, sp, 132
+    ld.w    s5, sp, 136
+    ld.w    s6, sp, 140
+    ld.w    s7, sp, 144
+    ld.w    s8, sp, 148
+    // restore sp
+    ld.w    sp, sp, 36
+    ertn
+
+    .end exception_return
+    .end common_exception
+</code></pre></div>
+<p>这时执行“ertn”指令后，CPU根据内核栈的情况回复到用户态，即“syscall”后的那条指令。这样整个系统调用就执行完毕了。</p>
+<p>至此，实验五中的主要工作描述完毕。</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs"], "search": "../../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.51d95adb.min.js"></script>
+      
+    
+  </body>
+</html>
